@@ -1,0 +1,1 @@
+const int exerciseNameLength = 70;
