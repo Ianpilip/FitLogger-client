@@ -43,12 +43,20 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
-          color: Colors.blue,
+          color: Colors.white,
           height: 60.0,
           child: TabBar(
-            indicator: BoxDecoration(color: Colors.white),
-            labelColor: Colors.blue,
-            unselectedLabelColor: Colors.white,
+            // indicator: BoxDecoration(color: Colors.white),
+            indicator: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.grey[900],
+                  width: 2.0,
+                ),
+              ),
+            ),
+            labelColor: Colors.grey[900],
+            unselectedLabelColor: Colors.grey[600],
             tabs: <Widget>[
               Tab(
                 child: Container(

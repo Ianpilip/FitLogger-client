@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:FitLogger/views/home.dart';
+import 'package:FitLogger/constants/colors.dart' as ColorConstants;
+import 'package:FitLogger/helpers/custom_material_color.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -12,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200],
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(),

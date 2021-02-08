@@ -20,3 +20,9 @@ const int GHOST_WHITE = 4294506751;
 // buffer.write(hexString.replaceFirst('#', ''));
 // int color = int.parse(buffer.toString(), radix: 16);
 // print(color);
+
+
+// The function below should also work
+// Color getColorFromColorCode(String code){
+//   return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+// }
