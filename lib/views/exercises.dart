@@ -4,6 +4,7 @@ import 'dart:ui';
 // import 'package:FitLogger/widgets/alert.dart';
 import 'package:FitLogger/sub-views/dialog.dart';
 import 'package:FitLogger/forms/exercises.dart';
+import 'package:decorated_icon/decorated_icon.dart';
 
 
 class Exercises extends StatelessWidget {
@@ -42,9 +43,37 @@ class Exercises extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.all(15.0),
           child: RaisedButton(
-            shape: CircleBorder(),
-            color: Colors.blue,
-            child: Icon(Icons.add, color: Colors.white, size: 60),
+            // shape: CircleBorder(),
+            shape: CircleBorder(side: BorderSide(color: Colors.black87)),
+            color: Colors.white,
+            // child: Icon(Icons.add, color: Colors.black87, size: 60),
+            child: DecoratedIcon(
+              Icons.add,
+              color: Colors.white,
+              size: 60.0,
+              shadows: [
+                BoxShadow(
+                  blurRadius: 0,
+                  color: Colors.black87,
+                  offset: Offset(1, 1),
+                ),
+                BoxShadow(
+                  blurRadius: 0,
+                  color: Colors.black87,
+                  offset: Offset(-1, -1),
+                ),
+                BoxShadow(
+                  blurRadius: 0,
+                  color: Colors.black87,
+                  offset: Offset(1, -1),
+                ),
+                BoxShadow(
+                  blurRadius: 0,
+                  color: Colors.black87,
+                  offset: Offset(-1, 1),
+                ),
+              ],
+            ),
             onPressed: () {
               return showGeneralDialog(
                 barrierDismissible: true,

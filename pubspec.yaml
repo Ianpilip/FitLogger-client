@@ -32,6 +32,7 @@ dependencies:
   table_calendar: ^2.3.3
   calendar_flutter: ^1.1.5
   http: ^0.12.2
+  decorated_icon: ^1.0.3
 
 dev_dependencies:
   flutter_test:

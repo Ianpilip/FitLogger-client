@@ -31,12 +31,9 @@ class _ExerciseFormState extends State<ExerciseForm> {
         child: TextField(
           onChanged: (value) {
             int isSymbolsRemainsIsBiggerThanZero = LogicSettings.exerciseNameLength - value.length;
-            // print({isSymbolsRemainsIsBiggerThanZero, controller.text});
-            // _maxAvailableExerciseNameText = controller.text;
             setState(() {
               _symbolsRemains = isSymbolsRemainsIsBiggerThanZero;
             });
-            // print(controller.text);
             if(isSymbolsRemainsIsBiggerThanZero == 0) {
               _maxAvailableExerciseNameText = controller.text;
             }

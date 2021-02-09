@@ -36,22 +36,22 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         child: TextField(
           controller: controller,
           obscureText: obscure,
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(fontSize: 20, color: Colors.black),
           decoration: InputDecoration(
-            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white30),
+            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.grey),
             hintText: hint,
             // Field decoration when it is IN focus
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 3)
+              borderSide: BorderSide(color: Colors.orange, width: 3)
             ),
             // Field decoration when it is NOT IN focus
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white54, width: 1)
+                borderSide: BorderSide(color: Colors.green, width: 1)
             ),
             prefixIcon: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
               child: IconTheme(
-                data: IconThemeData(color: Colors.white),
+                data: IconThemeData(color: Colors.yellow),
                 child: icon,
               ),
             )
@@ -63,7 +63,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
     Widget _button(String label, Function func) {
       return RaisedButton(
         highlightColor: Theme.of(context).primaryColor,
-        color: Colors.white,
+        color: Colors.black,
         child: Text(
           label,
           style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: 20)
@@ -107,49 +107,53 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
       _emailController.clear();
       _passwordController.clear();
+
+      FocusScope.of(context).unfocus();
     }
 
-    return Column(
-      children: <Widget>[
-        _logo(),
-        (
-          showLogin
-          ?
-          Column(
-            children: <Widget>[
-              _form('LOGIN', _authUser),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: GestureDetector(
-                  child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 20, color: Colors.white),),
-                  onTap: () {
-                    setState(() {
-                      showLogin = false;
-                    });
-                  }
-                ),
-              )
-            ],
-          )
-          :
-          Column(
-            children: <Widget>[
-              _form('REGISTER', _authUser),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: GestureDetector(
-                    child: Text('Already registered? Login!', style: TextStyle(fontSize: 20, color: Colors.white),),
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          _logo(),
+          (
+            showLogin
+            ?
+            Column(
+              children: <Widget>[
+                _form('LOGIN', _authUser),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: GestureDetector(
+                    child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 20, color: Colors.white),),
                     onTap: () {
                       setState(() {
-                        showLogin = true;
+                        showLogin = false;
                       });
                     }
-                ),
-              )
-            ],
+                  ),
+                )
+              ],
+            )
+            :
+            Column(
+              children: <Widget>[
+                _form('REGISTER', _authUser),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: GestureDetector(
+                      child: Text('Already registered? Login!', style: TextStyle(fontSize: 20, color: Colors.white),),
+                      onTap: () {
+                        setState(() {
+                          showLogin = true;
+                        });
+                      }
+                  ),
+                )
+              ],
+            )
           )
-        )
-      ],
+        ],
+      )
     );
   }
 }
