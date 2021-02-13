@@ -54,13 +54,15 @@ class _ExerciseFormState extends State<ExerciseForm> {
           controller: controller,
           style: TextStyle(fontSize: 20, color: Colors.black),
           decoration: InputDecoration(
-            hintStyle: TextStyle(fontSize: 14, color: Colors.black),
+            hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
             hintText: widget.hint,
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black, width: 3)
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.black87, width: 2)
             ),
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black26, width: 1)
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.black54, width: 1)
             ),
           ),
         ),
@@ -71,7 +73,8 @@ class _ExerciseFormState extends State<ExerciseForm> {
       child: Column(
         children: <Widget>[
           _input(widget.exersiseNameController),
-          Text(_symbolsRemains.toString())
+          SizedBox(height: 10),
+          Text('Symbols remained: ${_symbolsRemains.toString()}')
         ]
       )
     );

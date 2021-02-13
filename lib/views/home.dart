@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('FitLogger')),
+      appBar: AppBar(title: Text('FitLogger', style: TextStyle(fontSize: 24),)),
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         controller: _tabController,

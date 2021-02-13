@@ -20,7 +20,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
     Widget _logo() {
       return Padding(
-        padding: EdgeInsets.only(top: 100),
+        padding: EdgeInsets.only(top: 50),
         child: Container(
           child: Align(
             child: FlutterLogo(size: 70.0),
@@ -42,16 +42,18 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             hintText: hint,
             // Field decoration when it is IN focus
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.orange, width: 3)
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.black87, width: 2)
             ),
             // Field decoration when it is NOT IN focus
             enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.green, width: 1)
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: Colors.black54, width: 1)
             ),
             prefixIcon: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),
               child: IconTheme(
-                data: IconThemeData(color: Colors.yellow),
+                data: IconThemeData(color: Colors.grey),
                 child: icon,
               ),
             )
@@ -62,11 +64,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
     Widget _button(String label, Function func) {
       return RaisedButton(
-        highlightColor: Theme.of(context).primaryColor,
-        color: Colors.black,
+        // highlightColor: Theme.of(context).primaryColor,
+        // color: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Text(
           label,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor, fontSize: 20)
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[800], fontSize: 20)
         ),
         onPressed: () {
           func();
@@ -88,9 +93,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             ),
             SizedBox(height: 20,),
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
               child: Container(
-                height: 50,
+                height: 55,
                 width: MediaQuery.of(context).size.width,
                 child: _button(label, func),
               ),
@@ -124,7 +129,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: GestureDetector(
-                    child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 20, color: Colors.white),),
+                    child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 16, color: Colors.black87),),
                     onTap: () {
                       setState(() {
                         showLogin = false;
@@ -141,7 +146,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: GestureDetector(
-                      child: Text('Already registered? Login!', style: TextStyle(fontSize: 20, color: Colors.white),),
+                      child: Text('Already registered? Login!', style: TextStyle(fontSize: 16, color: Colors.black87),),
                       onTap: () {
                         setState(() {
                           showLogin = true;

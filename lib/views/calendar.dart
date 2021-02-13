@@ -233,6 +233,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   children: [
                     Text('Week starts with'),
                     Radio(
+                      activeColor: Colors.black54,
                       value: calendar.startWeekDay['Sunday'],
                       groupValue: _startWeekDay,
                       autofocus: true,
@@ -243,6 +244,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       style: TextStyle(fontSize: 16.0),
                     ),
                     Radio(
+                      activeColor: Colors.black54,
                       value: calendar.startWeekDay['Monday'],
                       groupValue: _startWeekDay,
                       onChanged: _changeStartWeekDay,
