@@ -1,4 +1,0 @@
-#Sun Jan 31 20:07:36 EET 2021
-base.0=C\:\\Users\\yan.pylypiuk\\fluttersrc\\FitLogger\\build\\app\\intermediates\\dex\\profile\\mergeDexProfile\\out\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
