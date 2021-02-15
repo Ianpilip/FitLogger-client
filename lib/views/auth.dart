@@ -116,48 +116,54 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       FocusScope.of(context).unfocus();
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          _logo(),
-          (
-            showLogin
-            ?
-            Column(
-              children: <Widget>[
-                _form('LOGIN', _authUser),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: GestureDetector(
-                    child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 16, color: Colors.black87),),
-                    onTap: () {
-                      setState(() {
-                        showLogin = false;
-                      });
-                    }
-                  ),
-                )
-              ],
-            )
-            :
-            Column(
-              children: <Widget>[
-                _form('REGISTER', _authUser),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: GestureDetector(
-                      child: Text('Already registered? Login!', style: TextStyle(fontSize: 16, color: Colors.black87),),
+    return Container(
+      child: InkWell(
+        onTap: () {
+          // Hide keyboard and make textField unfocused after click in the area of the alert
+          FocusScope.of(context).unfocus();
+        },
+        child: Column(
+          children: <Widget>[
+            _logo(),
+            (
+              showLogin
+              ?
+              Column(
+                children: <Widget>[
+                  _form('LOGIN', _authUser),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: GestureDetector(
+                      child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 16, color: Colors.black87),),
                       onTap: () {
                         setState(() {
-                          showLogin = true;
+                          showLogin = false;
                         });
                       }
-                  ),
-                )
-              ],
+                    ),
+                  )
+                ],
+              )
+              :
+              Column(
+                children: <Widget>[
+                  _form('REGISTER', _authUser),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: GestureDetector(
+                        child: Text('Already registered? Login!', style: TextStyle(fontSize: 16, color: Colors.black87),),
+                        onTap: () {
+                          setState(() {
+                            showLogin = true;
+                          });
+                        }
+                    ),
+                  )
+                ],
+              )
             )
-          )
-        ],
+          ],
+        )
       )
     );
   }
