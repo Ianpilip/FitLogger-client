@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:FitLogger/views/calendar.dart' as Calendar;
 import 'package:FitLogger/views/exercises.dart';
 import 'package:FitLogger/views/trainings.dart';
+import 'package:FitLogger/views/auth.dart';
 
 class MyHomePage extends StatefulWidget {
   @override

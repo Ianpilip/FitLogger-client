@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+
+import 'package:FitLogger/requests/auth.dart';
 
 class AuthorizationPage extends StatefulWidget {
   @override
@@ -13,7 +16,9 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
   String _email;
   String _password;
-  bool showLogin = true;
+
+  String _emailValidationError;
+  String _passwordValidationError;
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +84,27 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       );
     }
 
-    Widget _form(String label, Function func) {
+    Widget _form(Function func) {
       return Container(
         child: Column(
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(bottom: 20, top: 50),
-              child: _input(Icon(Icons.email), 'EMAIL', _emailController, false),
+              child: Column(
+                children: <Widget>[
+                  _input(Icon(Icons.email), 'EMAIL', _emailController, false),
+                  _emailValidationError != null ? Text(_emailValidationError, style: TextStyle(fontSize: 16, color: Colors.red)) : Text('')
+                ]
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(bottom: 20),
-              child: _input(Icon(Icons.lock), 'PASSWORD', _passwordController, true),
+              child: Column(
+                children: <Widget>[
+                  _input(Icon(Icons.lock), 'PASSWORD', _passwordController, true),
+                  _passwordValidationError != null ? Text(_passwordValidationError, style: TextStyle(fontSize: 16, color: Colors.red)) : Text('')
+                ]
+              )
             ),
             SizedBox(height: 20,),
             Padding(
@@ -97,7 +112,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               child: Container(
                 height: 55,
                 width: MediaQuery.of(context).size.width,
-                child: _button(label, func),
+                child: _button('AUTHENTIFICATE', func),
               ),
             )
           ],
@@ -106,12 +121,24 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
     }
 
     // Form handler
-    void _authUser() {
+    _authUser() async {
       _email = _emailController.text;
       _password = _passwordController.text;
 
-      _emailController.clear();
-      _passwordController.clear();
+      AuthRequests authRequests = AuthRequests();
+      Map<String, dynamic> response = await authRequests.auth(_email, _password);
+      print(response);
+
+      setState(() {
+        _emailValidationError = response['validationErrors']['email'];
+        _passwordValidationError = response['validationErrors']['password'];
+      });
+
+      if(response['validationErrors'].length == 0 && response['body']['userTokenID'] != null) {
+        _emailController.clear();
+        _passwordController.clear();
+        print('Update Hive with userTokenID!');
+      }
 
       FocusScope.of(context).unfocus();
     }
@@ -125,42 +152,19 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         child: Column(
           children: <Widget>[
             _logo(),
-            (
-              showLogin
-              ?
               Column(
-                children: <Widget>[
-                  _form('LOGIN', _authUser),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      child: Text('Not registered yet? Register!', style: TextStyle(fontSize: 16, color: Colors.black87),),
-                      onTap: () {
-                        setState(() {
-                          showLogin = false;
-                        });
-                      }
-                    ),
-                  )
-                ],
-              )
-              :
-              Column(
-                children: <Widget>[
-                  _form('REGISTER', _authUser),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                        child: Text('Already registered? Login!', style: TextStyle(fontSize: 16, color: Colors.black87),),
-                        onTap: () {
-                          setState(() {
-                            showLogin = true;
-                          });
-                        }
-                    ),
-                  )
-                ],
-              )
+              children: <Widget>[
+                _form(_authUser),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: GestureDetector(
+                    child: Text('Forgot your password? Restore!', style: TextStyle(fontSize: 16, color: Colors.black87),),
+                    onTap: () {
+                      print('Restore password');
+                    }
+                  ),
+                )
+              ],
             )
           ],
         )
