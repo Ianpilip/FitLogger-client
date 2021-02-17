@@ -23,6 +23,12 @@ class CalendarRequests {
     // Response response = await post(url, headers: headers, body: json);
     // print(response.body);
 
+    // String url = 'http://localhost:3000/user/send-restore-password-code';
+    // Map<String, String> headers = {"Content-type": "application/json"};
+    // String json = '{"email": "ianpilip@gmail.com", "password": "qweasd"}';
+    // Response response = await post(url, headers: headers, body: json);
+    // print(response.body);
+
     // return Future.delayed(Duration(milliseconds: 300), () => this.date);
     return this.date;
   }

@@ -149,24 +149,26 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           // Hide keyboard and make textField unfocused after click in the area of the alert
           FocusScope.of(context).unfocus();
         },
-        child: Column(
-          children: <Widget>[
-            _logo(),
-              Column(
-              children: <Widget>[
-                _form(_authUser),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: GestureDetector(
-                    child: Text('Forgot your password? Restore!', style: TextStyle(fontSize: 16, color: Colors.black87),),
-                    onTap: () {
-                      print('Restore password');
-                    }
-                  ),
-                )
-              ],
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _logo(),
+                Column(
+                children: <Widget>[
+                  _form(_authUser),
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: GestureDetector(
+                      child: Text('Forgot your password? Restore!', style: TextStyle(fontSize: 16, color: Colors.black87),),
+                      onTap: () {
+                        print('Restore password');
+                      }
+                    ),
+                  )
+                ],
+              )
+            ],
+          )
         )
       )
     );

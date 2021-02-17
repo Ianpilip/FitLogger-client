@@ -9,9 +9,9 @@ class Trainings extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.all(15.0),
           child: RaisedButton(
-            shape: CircleBorder(),
-            color: Color.fromRGBO(50, 65, 85, 1),
-            child: Icon(Icons.add, color: Colors.white, size: 60),
+            shape: CircleBorder(side: BorderSide(color: Colors.black87)),
+            color: Colors.white,
+            child: Icon(Icons.add, color: Colors.black87, size: 60),
             onPressed: () {},
           ),
         )
