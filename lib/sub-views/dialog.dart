@@ -31,47 +31,49 @@ class BlurryDialog extends StatelessWidget {
           ),
           title: Center(child: Text(title, style: textStyle)),
           insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 20),
-                child: Center(child: SingleChildScrollView(child: content)),
-                width: MediaQuery.of(context).size.width,
-                // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  OutlineButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    highlightedBorderColor: Colors.black54,
-                    borderSide: BorderSide(color: Colors.transparent),
-                    shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Center(child: content),
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    OutlineButton(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      highlightedBorderColor: Colors.black54,
+                      borderSide: BorderSide(color: Colors.transparent),
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text("Continue", style: TextStyle(color: Colors.black87, fontSize: 18)),
+                      onPressed: () {
+                        callbackConfirm();
+                      },
                     ),
-                    child: Text("Continue", style: TextStyle(color: Colors.black87, fontSize: 18)),
-                    onPressed: () {
-                      callbackConfirm();
-                    },
-                  ),
-                  OutlineButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    highlightedBorderColor: Colors.black54,
-                    borderSide: BorderSide(color: Colors.transparent),
-                    shape: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
+                    OutlineButton(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      highlightedBorderColor: Colors.black54,
+                      borderSide: BorderSide(color: Colors.transparent),
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text("Cancel", style: TextStyle(color: Colors.black87, fontSize: 18)),
+                      onPressed: () {
+                        callbackCancel();
+                      },
                     ),
-                    child: Text("Cancel", style: TextStyle(color: Colors.black87, fontSize: 18)),
-                    onPressed: () {
-                      callbackCancel();
-                    },
-                  ),
-                ],
-              )
-            ]
+                  ],
+                )
+              ]
+            )
           )
         )
       )
