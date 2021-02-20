@@ -20,6 +20,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   String _emailValidationError;
   String _passwordValidationError;
 
+  bool _restorePassword = false;
+
   @override
   Widget build(BuildContext context) {
 
@@ -106,15 +108,32 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 ]
               )
             ),
-            SizedBox(height: 20,),
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20, bottom: 10),
               child: Container(
                 height: 55,
                 width: MediaQuery.of(context).size.width,
-                child: _button('AUTHENTIFICATE', func),
+                child: _button('SEND', func),
               ),
-            )
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Restore password'),
+                  Checkbox(
+                    activeColor: Colors.black54,
+                    value: _restorePassword,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _restorePassword = newValue;
+                      });
+                    },
+                  ),
+                ]
+              )
+            ),
           ],
         ),
       );
@@ -156,15 +175,15 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 Column(
                 children: <Widget>[
                   _form(_authUser),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: GestureDetector(
-                      child: Text('Forgot your password? Restore!', style: TextStyle(fontSize: 16, color: Colors.black87),),
-                      onTap: () {
-                        print('Restore password');
-                      }
-                    ),
-                  )
+                  // Padding(
+                  //   padding: EdgeInsets.all(10),
+                  //   child: GestureDetector(
+                  //     child: Text('Forgot your password? Restore!', style: TextStyle(fontSize: 16, color: Colors.black87),),
+                  //     onTap: () {
+                  //       print('Restore password');
+                  //     }
+                  //   ),
+                  // )
                 ],
               )
             ],

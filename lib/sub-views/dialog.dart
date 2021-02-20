@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 
 class BlurryDialog extends StatelessWidget {
 
@@ -8,8 +9,17 @@ class BlurryDialog extends StatelessWidget {
   final Widget content;
   final VoidCallback callbackConfirm;
   final VoidCallback callbackCancel;
+  final Map<String, dynamic> options;
 
-  BlurryDialog({this.title, this.content, this.callbackConfirm, this.callbackCancel});
+  BlurryDialog({
+    this.title,
+    this.content,
+    this.callbackConfirm,
+    this.callbackCancel,
+    this.options = const {
+      LogicSettings.dialogCancelButton : true
+    }
+  });
   final TextStyle textStyle = TextStyle(color: Colors.black);
 
   // We need `MediaQuery.of(context).viewInsets.bottom` here to identify
@@ -17,6 +27,7 @@ class BlurryDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double verticalInsetPadding = MediaQuery.of(context).viewInsets.bottom > 0.0 ? 4.5 : 3.5;
+    print(title);
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
       textAlign: TextAlign.center,
@@ -29,7 +40,7 @@ class BlurryDialog extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(30.0))
           ),
-          title: Center(child: Text(title, style: textStyle)),
+          title: title != null ? Center(child: Text(title, style: textStyle)) : title,
           insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
           content: SingleChildScrollView(
             child: Column(
@@ -57,7 +68,7 @@ class BlurryDialog extends StatelessWidget {
                         callbackConfirm();
                       },
                     ),
-                    OutlineButton(
+                    options[LogicSettings.dialogCancelButton] == true ? OutlineButton(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       highlightedBorderColor: Colors.black54,
@@ -69,7 +80,7 @@ class BlurryDialog extends StatelessWidget {
                       onPressed: () {
                         callbackCancel();
                       },
-                    ),
+                    ) : SizedBox(),
                   ],
                 )
               ]
