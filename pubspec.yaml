@@ -33,6 +33,7 @@ dependencies:
   calendar_flutter: ^1.1.5
   http: ^0.12.2
   decorated_icon: ^1.0.3
+  fluttertoast: ^7.1.8
 
 dev_dependencies:
   flutter_test:

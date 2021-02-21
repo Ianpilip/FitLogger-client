@@ -4,6 +4,8 @@ import 'package:http/http.dart';
 
 import 'package:FitLogger/requests/auth.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 class AuthorizationPage extends StatefulWidget {
   @override
   _AuthorizationPageState createState() => _AuthorizationPageState();
@@ -167,7 +169,16 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           setState(() {
             _restorePassword = false;
           });
-          print('Check email to restore the passwrod');
+          	
+          Fluttertoast.showToast(
+              msg: response['body']['text'],
+              toastLength: Toast.LENGTH_LONG,
+              timeInSecForIosWeb: 3,
+              gravity: ToastGravity.CENTER,
+              backgroundColor: Colors.green,
+              textColor: Colors.black87
+          );
+          print('Check email to restore the password');
         }
       }
 
