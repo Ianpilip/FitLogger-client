@@ -145,18 +145,30 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       _password = _passwordController.text;
 
       AuthRequests authRequests = AuthRequests();
-      Map<String, dynamic> response = await authRequests.auth(_email, _password);
-      print(response);
+      Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);
+      // print(response);
 
       setState(() {
         _emailValidationError = response['validationErrors']['email'];
         _passwordValidationError = response['validationErrors']['password'];
       });
 
-      if(response['validationErrors'].length == 0 && response['body']['userTokenID'] != null) {
-        _emailController.clear();
-        _passwordController.clear();
-        print('Update Hive with userTokenID!');
+      print(_restorePassword);
+
+      if(response['validationErrors'].length == 0) {
+        if(response['body']['userTokenID'] != null) {
+          _emailController.clear();
+          _passwordController.clear();
+          print('Update Hive with userTokenID!');
+        }
+        if(response['body']['text'] != null) {
+          _emailController.clear();
+          _passwordController.clear();
+          setState(() {
+            _restorePassword = false;
+          });
+          print('Check email to restore the passwrod');
+        }
       }
 
       FocusScope.of(context).unfocus();
