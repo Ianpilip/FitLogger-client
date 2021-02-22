@@ -148,17 +148,15 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
       AuthRequests authRequests = AuthRequests();
       Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);
-      // print(response);
+      print(response);
 
       setState(() {
         _emailValidationError = response['validationErrors']['email'];
         _passwordValidationError = response['validationErrors']['password'];
       });
 
-      print(_restorePassword);
-
       if(response['validationErrors'].length == 0) {
-        if(response['body']['userTokenID'] != null) {
+        if(response['body']['userTokenID'] != null && response['body']['userID'] != null) {
           _emailController.clear();
           _passwordController.clear();
           print('Update Hive with userTokenID!');
