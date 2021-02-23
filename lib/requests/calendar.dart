@@ -30,6 +30,14 @@ class CalendarRequests {
     // print(response.body);
 
     // return Future.delayed(Duration(milliseconds: 300), () => this.date);
+    
+    // Response response = await get('http://localhost:3000/exercise/get-all/602c45852d220516f33f20db/1159shx8634lxyix8do8mqs');
+    
+    // Working example
+    // Response response = await get('http://localhost:3000/region/get-all');
+    // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    // print(jsonDecoded);
+
     return this.date;
   }
 
