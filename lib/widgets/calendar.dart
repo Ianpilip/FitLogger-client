@@ -160,6 +160,11 @@ class Calendar {
                 decoration: BoxDecoration(
                   color: Color(allDaysInMonthsWithSiblingsMonths[index]['backgroundColor']),
                   shape: BoxShape.circle,
+                  border: (
+                      DateTime.now().year == year &&
+                      DateTime.now().month == month &&
+                      lastClickableDay == int.parse(allDaysInMonthsWithSiblingsMonths[index]['value'])
+                    ) ? Border.all(color: Colors.black) : Border.all(color: Colors.transparent)
                 ),
                 margin: EdgeInsets.symmetric(vertical: UiSettings.marginCellDayCalendar),
                 padding: EdgeInsets.symmetric(vertical: UiSettings.paddingCellDayCalendar),
