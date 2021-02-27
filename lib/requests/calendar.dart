@@ -18,31 +18,30 @@ class CalendarRequests {
     // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     // print(jsonDecoded);
 
+    // Working get all workout days
+    // Response response = await get('http://localhost:3000/calendar/get-all/602c45852d220516f33f20db/1159shx8634lxyix8do8mqs');
+    // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    // print(jsonDecoded);
 
-
-    // OLD (seems that it is not necessary anymore)
-
+    // Working create/update exercise
     // String json = jsonEncode(<String, dynamic>{
-    //   'year': 2021,
-    //   'month': 2,
-    //   'day': 14,
+    //   'name': 'Bicep curls with barbell',
+    //   'exerciseID': '603ad849062e81496105d6dc',
+    //   'regionID': '603ac277df746a381172f18f',
     //   'userID': '602c45852d220516f33f20db',
-    //   // 'exerciseID': '60357cf0f959429284bf107b', // bench press
-    //   'exerciseID': '60357dccf959429284bf107c', // pull up
-    //   'color': 4294948277,
-    //   'reps': [12,10,9],
-    //   // 'weights': [80, 75, 72.5],
-    //   'weights': [20, 20, 17.5],
-    //   'updateExercise': true
+    //   'update': true
     // });
+    // String url = 'http://localhost:3000/exercise/new-exercise';
+    // Map<String, String> headers = {"Content-type": "application/json"};
+    // Response response = await post(url, headers: headers, body: json);
+    // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    // print(jsonDecoded);
 
-
-    // NEW
-
+    // Working Create/Update/Delete new workout day
     // String json = jsonEncode(<String, dynamic>{
     //   'year': 2021,
     //   'month': 2,
-    //   'day': 14,
+    //   'day': 23,
     //   'userID': '602c45852d220516f33f20db',
     //   'exercises': [
     //     {
@@ -52,28 +51,14 @@ class CalendarRequests {
     //     },
     //     {
     //       'exerciseID': '60357dccf959429284bf107c',
-    //       'reps': [10, 10, 7],
-    //       'weights': [25, 20, 17.5]
+    //       'reps': [10, 10, 6],
+    //       'weights': [25, 20, 20]
     //     }
     //   ],
-    //   'color': 4294948277,
+    //   'color': 4290833407,
+    //   'comment': 'some text',
     //   'update': true
     // });
-
-    // String json = jsonEncode(<String, dynamic>{
-    //   'year': 2021,
-    //   'month': 2,
-    //   'day': 14,
-    //   'userID': '602c45852d220516f33f20db',
-    //   'exercises': [
-    //     {
-    //       'exerciseID': '60357cf0f959429284bf107b'
-    //     }
-    //   ],
-    //   'color': 4294948277,
-    //   'delete': true
-    // });
-
     // String url = 'http://localhost:3000/calendar/new-training-day';
     // Map<String, String> headers = {"Content-type": "application/json"};
     // Response response = await post(url, headers: headers, body: json);
