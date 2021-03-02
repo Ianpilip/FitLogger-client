@@ -1,0 +1,4 @@
+enum HiveBoxStatusEnum{
+  Opened,
+  Closed
+}
