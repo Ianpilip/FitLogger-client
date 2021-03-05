@@ -23,6 +23,16 @@ class CalendarRequests {
     // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     // print(jsonDecoded);
 
+    // Working refresh user's token
+    // String json = jsonEncode(<String, dynamic>{
+    //   'userID': '602c45852d220516f33f20db'
+    // });
+    // String url = 'http://localhost:3000/user/refresh-token';
+    // Map<String, String> headers = {"Content-type": "application/json"};
+    // Response response = await post(url, headers: headers, body: json);
+    // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    // print(jsonDecoded);
+
     // Working create/update exercise
     // String json = jsonEncode(<String, dynamic>{
     //   'name': 'Bicep curls with barbell',
@@ -65,7 +75,7 @@ class CalendarRequests {
     // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     // print(jsonDecoded);
 
-    // return Future.delayed(Duration(milliseconds: 300), () => this.date);
+    // return Future.delayed(Duration(milliseconds: 600), () => this.date);
     return this.date;
   }
 

@@ -1,0 +1,4 @@
+enum StartPageEnum{
+  Auth,
+  Home
+}

@@ -9,12 +9,13 @@ import 'package:hive/hive.dart';
 // import 'package:FitLogger/sub-views/dialog.dart';
 // import 'package:FitLogger/sub-views/info_auth_dialog.dart';
 // import 'package:FitLogger/sub-views/show_general_dialog.dart';
-import 'package:FitLogger/constants/hive_box_status_enum.dart';
+import 'package:FitLogger/constants/start_page_enum.dart';
+import 'package:FitLogger/requests/auth.dart';
 
 import 'package:FitLogger/sub-views/home_page_common.dart';
 import 'package:FitLogger/sub-views/home_page_auth.dart';
 
-// import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
+import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 
 import 'dart:convert';
 import 'package:http/http.dart';
@@ -28,14 +29,12 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   TabController _tabController;
   // int _currentTab = 0;
-  // HiveBoxStatusEnum userDataStatus;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(initialIndex: 0, length: 3, vsync: this);
     // _tabController.addListener(() => setState(() => _currentTab = _tabController.index));
-    // _checkIfUserDataExists();
   }
 
   @override
@@ -44,78 +43,74 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  // _checkIfUserDataExists() async{
-  //   bool userDataExists = await Hive.boxExists('asd');
-  //   if(userDataExists == false) {
-  //     setState(() {
-  //       userDataStatus = HiveBoxStatusEnum.Closed;
-  //     });
-  //   }
-  // }
-
-    Future<Box<dynamic>> getUserData() async {
-      // Date date = new DateTime.utc('2021-02-22T21:57:21.024+00:00');
-      DateTime old = DateTime.parse('2021-02-22T21:57:21.024+00:00');
-      String now = DateTime.now().toIso8601String();
-      print(old.compareTo(DateTime.now()));
-
+    Future<StartPageEnum> getUserData() async {
       await Hive.openBox('user');
       Box<dynamic> userData = Hive.box('user');
-      print(userData.get('token'));
-      return userData;
+      if(
+        userData.get('tokenID') != null &&
+        userData.get('lastUpdate') != null &&
+        userData.get('userID') != null
+      ) {
+        int lastTokenUpdateInMilliseconds = DateTime.parse('2021-02-22T21:57:21.024+00:00').millisecondsSinceEpoch;
+        int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
+        int maxPermissibleDifferenceInMilliseconds = LogicSettings.lastRefreshToken;
+        int currentDifferenceInMilliseconds = (nowInMilliseconds - lastTokenUpdateInMilliseconds) - maxPermissibleDifferenceInMilliseconds;
+        if(currentDifferenceInMilliseconds > 0) return StartPageEnum.Auth;
+        
+        // Not put it in await function, because there is no need in it
+        AuthRequests authRequests = AuthRequests();
+        authRequests.refreshToken(userData.get('userID')).then((user) {
+          userData.putAll({
+            'tokenID': user['tokenID'],
+            'lastUpdate': user['tokenID'],
+            'userID': user['userID'],
+          });
+        });
 
-    // String url = 'http://localhost:3000/user/auth';
-    // Map<String, String> headers = {"Content-type": "application/json"};
-    // String json = jsonEncode(<String, dynamic>{
-    //   'email': email,
-    //   'password': password,
-    //   'restorePassword': restorePassword
-    // });
-    // Response response = await post(url, headers: headers, body: json);
-
-
-
-    // Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
-    // return jsonDecoded;
+        return StartPageEnum.Home;
+      } else {
+        return StartPageEnum.Auth;
+      }
   }
 
   @override
   Widget build(BuildContext context) {
 
-    // BlurryDialog alert = getInfoAuthDialog(context);
+      // return FutureBuilder<StartPageEnum>(
+      //   future: getUserData(),
+      //   builder: (BuildContext context, AsyncSnapshot<StartPageEnum> snapshot) {
+      //     Widget _show;
+      //     if (snapshot.hasData) {
+      //       print(snapshot.data);
+      //       _show = snapshot.data == StartPageEnum.Home ? getCommonHomePage(context, _tabController) : getAuthHomePage(context);
+      //     } else if (snapshot.hasError) {
+      //       _show = Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         crossAxisAlignment: CrossAxisAlignment.center,
+      //         children: [
+      //           Icon(
+      //             Icons.error_outline,
+      //             color: Colors.red,
+      //             size: 60,
+      //           ),
+      //           Padding(
+      //             padding: const EdgeInsets.only(top: 16),
+      //             child: Text('Error: ${snapshot.error}'),
+      //           )
+      //         ],
+      //       );
+      //     } else {
+      //       _show = Scaffold(backgroundColor: Colors.black);
+      //     }
+      //     return _show;
+      //   },
+      // );
 
-      return FutureBuilder<Box<dynamic>>(
-        future: getUserData(),
-        builder: (BuildContext context, AsyncSnapshot<Box<dynamic>> snapshot) {
-          Widget _show;
-          if (snapshot.hasData) {
-            _show = Scaffold(backgroundColor: Colors.orange);
-          } else if (snapshot.hasError) {
-            _show = Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text('Error: ${snapshot.error}'),
-                )
-              ],
-            );
-          } else {
-            _show = Scaffold(backgroundColor: Colors.black);
-          }
-          return _show;
-        },
-      );
-
-    // return getCommonHomePage(context, _tabController);
+    return getCommonHomePage(context, _tabController);
     // return getAuthHomePage(context);
 
+
+    // BlurryDialog alert = getInfoAuthDialog(context);
     // return Scaffold(
     //   backgroundColor: Colors.white,
     //   // appBar: AppBar(
