@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:hive/hive.dart';
 
 import 'package:FitLogger/requests/auth.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -148,7 +148,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
       AuthRequests authRequests = AuthRequests();
       Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);
-      print(response);
 
       setState(() {
         _emailValidationError = response['validationErrors']['email'];
@@ -159,7 +158,18 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         if(response['body']['userTokenID'] != null && response['body']['userID'] != null) {
           _emailController.clear();
           _passwordController.clear();
-          print('Update Hive with userTokenID!');
+
+          Box<dynamic> userData = Hive.box('user2');
+          // Not put it in await function, because there is no need in it
+          AuthRequests authRequests = AuthRequests();
+          authRequests.refreshToken(userData.get('userID')).then((user) {
+            userData.putAll({
+              'tokenID': user['tokenID'],
+              'lastUpdate': user['tokenID'],
+              'userID': user['userID'],
+            });
+            print(['Update Hive with userTokenID!', user]);
+          });
         }
         if(response['body']['text'] != null) {
           _emailController.clear();

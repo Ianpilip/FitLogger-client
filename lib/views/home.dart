@@ -16,9 +16,7 @@ import 'package:FitLogger/sub-views/home_page_common.dart';
 import 'package:FitLogger/sub-views/home_page_auth.dart';
 
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
-
-import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -26,7 +24,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
-
   TabController _tabController;
   // int _currentTab = 0;
 
@@ -44,14 +41,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
     Future<StartPageEnum> getUserData() async {
-      await Hive.openBox('user');
-      Box<dynamic> userData = Hive.box('user');
+      // await Hive.openBox('user1');
+      Box<dynamic> userData = Hive.box('user2');
       if(
         userData.get('tokenID') != null &&
         userData.get('lastUpdate') != null &&
         userData.get('userID') != null
       ) {
-        int lastTokenUpdateInMilliseconds = DateTime.parse('2021-02-22T21:57:21.024+00:00').millisecondsSinceEpoch;
+        int lastTokenUpdateInMilliseconds = DateTime.parse(userData.get('lastUpdate')).millisecondsSinceEpoch;
         int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
         int maxPermissibleDifferenceInMilliseconds = LogicSettings.lastRefreshToken;
         int currentDifferenceInMilliseconds = (nowInMilliseconds - lastTokenUpdateInMilliseconds) - maxPermissibleDifferenceInMilliseconds;
@@ -59,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         
         // Not put it in await function, because there is no need in it
         AuthRequests authRequests = AuthRequests();
+        print('HERE');
         authRequests.refreshToken(userData.get('userID')).then((user) {
           userData.putAll({
             'tokenID': user['tokenID'],
@@ -75,6 +73,92 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+
+      // final ValueNotifier<Box<dynamic>> userDataMain = ValueNotifier<Box<dynamic>>(Hive.box('user1'));
+      
+    // return FutureBuilder<Box<dynamic>>(
+    return FutureBuilder<List<dynamic>>(
+      future: Future.wait([
+        Hive.openBox('user2'),
+        Hive.openBox('calendar'),
+        Hive.openBox('bodyRegions'),
+        Hive.openBox('exercises'),
+      ]),
+      // future: Hive.openBox('user2'),
+      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+        if (snapshot.hasData) {
+          return ValueListenableBuilder(
+            valueListenable: Hive.box('user2').listenable(),
+            builder: (BuildContext context, Box<dynamic> box, Widget child) {
+              if (box.values.isEmpty) {
+                return FutureBuilder<StartPageEnum>(
+                  future: getUserData(),
+                  builder: (BuildContext context, AsyncSnapshot<StartPageEnum> snapshot) {
+                    Widget _show;
+                    if (snapshot.hasData) {
+                      _show = snapshot.data == StartPageEnum.Home ? getCommonHomePage(context, _tabController) : getAuthHomePage(context);
+                    } else if (snapshot.hasError) {
+                      _show = Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 60,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Text('Error: ${snapshot.error}'),
+                          )
+                        ],
+                      );
+                    } else {
+                      // _show = Scaffold(backgroundColor: Colors.black);
+                      _show = Scaffold(
+                        body: Container(
+                          child: Align(
+                            child: FlutterLogo(size: 70.0),
+                          ),
+                        )
+                      );
+                    }
+                    return _show;
+                  },
+                );            
+              } else {
+                return getCommonHomePage(context, _tabController);
+              }
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text('Error: ${snapshot.error}'),
+              )
+            ],
+          );
+        } else {
+          // return Scaffold(backgroundColor: Colors.orange);
+          return Scaffold(
+            body: Container(
+              child: Align(
+                child: FlutterLogo(size: 70.0),
+              ),
+            )
+          );
+        }
+      },
+    );
 
       // return FutureBuilder<StartPageEnum>(
       //   future: getUserData(),
@@ -106,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       //   },
       // );
 
-    return getCommonHomePage(context, _tabController);
+    // return getCommonHomePage(context, _tabController);
     // return getAuthHomePage(context);
 
 
