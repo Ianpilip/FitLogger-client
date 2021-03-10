@@ -2,11 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:FitLogger/views/calendar.dart' as Calendar;
 import 'package:FitLogger/views/exercises.dart';
 import 'package:FitLogger/views/trainings.dart';
+import 'package:hive/hive.dart';
 
 Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
   return Scaffold(
     backgroundColor: Colors.white,
-    appBar: AppBar(title: Text('FitLogger', style: TextStyle(fontSize: 24))),
+    // appBar: AppBar(title: Text('FitLogger', style: TextStyle(fontSize: 24))),
+    appBar: AppBar(
+      title: Row(
+        children: [
+          SizedBox(width: 30.0,),
+          Expanded(child: Center(child: Text('FitLogger', style: TextStyle(fontSize: 24)))),
+          GestureDetector(
+            child: Icon(Icons.logout, size: 30.0, color: Colors.black87,),
+            onTap: () {
+              Box<dynamic> userData = Hive.box('user2');
+              userData.putAll({
+                'tokenID': null,
+                'lastUpdate': null,
+                'userID': null,
+              });
+            }
+          )
+        ],
+      )
+    ),
     body: TabBarView(
       physics: NeverScrollableScrollPhysics(),
       controller: _tabController,

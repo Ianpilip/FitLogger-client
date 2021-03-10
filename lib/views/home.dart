@@ -56,7 +56,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         
         // Not put it in await function, because there is no need in it
         AuthRequests authRequests = AuthRequests();
-        print('HERE');
         authRequests.refreshToken(userData.get('userID')).then((user) {
           userData.putAll({
             'tokenID': user['tokenID'],
@@ -90,7 +89,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           return ValueListenableBuilder(
             valueListenable: Hive.box('user2').listenable(),
             builder: (BuildContext context, Box<dynamic> box, Widget child) {
-              if (box.values.isEmpty) {
+              print(box.values);
+              bool ifSomethingIsNull = false;
+              if(box.values.isEmpty == false) {
+                void iterateUserData(value) {
+                  if(value == null) {
+                    ifSomethingIsNull = true;
+                  }
+                }
+                box.values.forEach(iterateUserData);
+              }
+              if (ifSomethingIsNull == true) {
                 return FutureBuilder<StartPageEnum>(
                   future: getUserData(),
                   builder: (BuildContext context, AsyncSnapshot<StartPageEnum> snapshot) {

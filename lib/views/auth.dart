@@ -162,11 +162,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           Box<dynamic> userData = Hive.box('user2');
           // Not put it in await function, because there is no need in it
           AuthRequests authRequests = AuthRequests();
-          authRequests.refreshToken(userData.get('userID')).then((user) {
+          authRequests.refreshToken(response['body']['userID']).then((user) {
             userData.putAll({
-              'tokenID': user['tokenID'],
-              'lastUpdate': user['tokenID'],
-              'userID': user['userID'],
+              'tokenID': user['body']['tokenID'],
+              'lastUpdate': user['body']['lastUpdate'],
+              'userID': user['body']['userID'],
             });
             print(['Update Hive with userTokenID!', user]);
           });
