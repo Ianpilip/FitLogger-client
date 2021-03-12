@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'dart:ui';
 import 'package:hive/hive.dart';
+import 'dart:collection';
 
 // import 'package:FitLogger/views/calendar.dart' as Calendar;
 // import 'package:FitLogger/views/exercises.dart';
@@ -18,6 +19,7 @@ import 'package:FitLogger/sub-views/home_page_common.dart';
 import 'package:FitLogger/sub-views/home_page_auth.dart';
 
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -42,51 +44,64 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     super.dispose();
   }
 
-    Future<StartPageEnum> getUserData() async {
-      print('HERE');
-      Box<dynamic> userData = Hive.box('user2');
-      Box<dynamic> calendarData = Hive.box('calendar');
-      Box<dynamic> exercisesData = Hive.box('exercises');
-      if(
-        userData.get('tokenID') != null &&
-        userData.get('lastUpdate') != null &&
-        userData.get('userID') != null
-      ) {
-        int lastTokenUpdateInMilliseconds = DateTime.parse(userData.get('lastUpdate')).millisecondsSinceEpoch;
-        int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
-        int maxPermissibleDifferenceInMilliseconds = LogicSettings.lastRefreshToken;
-        int currentDifferenceInMilliseconds = (nowInMilliseconds - lastTokenUpdateInMilliseconds) - maxPermissibleDifferenceInMilliseconds;
-        if(currentDifferenceInMilliseconds > 0) return StartPageEnum.Auth;
-        
-        // Not put it in await function, because there is no need in it
-        AuthRequests authRequests = AuthRequests();
-        CalendarRequests calendarRequests = CalendarRequests();
-        ExercisesRequests exercisesRequests = ExercisesRequests();
-        Map<String, dynamic> user = await authRequests.refreshToken(userData.get('userID'));
+  Future<StartPageEnum> getUserData() async {
+    print(4);
+    Box<dynamic> userData = Hive.box(userDataBoxName);
+    Box<dynamic> calendarData = Hive.box(calendarDataBoxName);
+    Box<dynamic> exercisesData = Hive.box(exercisesDataBoxName);
+    if(
+      userData.get('tokenID') != null &&
+      userData.get('lastUpdate') != null &&
+      userData.get('userID') != null
+    ) {
+      print(5);
+      int lastTokenUpdateInMilliseconds = DateTime.parse(userData.get('lastUpdate')).millisecondsSinceEpoch;
+      int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
+      int maxPermissibleDifferenceInMilliseconds = LogicSettings.lastRefreshToken;
+      int currentDifferenceInMilliseconds = (nowInMilliseconds - lastTokenUpdateInMilliseconds) - maxPermissibleDifferenceInMilliseconds;
+      if(currentDifferenceInMilliseconds > 0) return StartPageEnum.Auth;
+      
+      // Not put it in await function, because there is no need in it
+      AuthRequests authRequests = AuthRequests();
+      CalendarRequests calendarRequests = CalendarRequests();
+      ExercisesRequests exercisesRequests = ExercisesRequests();
+      Map<String, dynamic> user = await authRequests.refreshToken(userData.get('userID'));
 
-        List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
-          calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
-          exercisesRequests.getAllBodyRegions(),
-          exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
-        ]);
-        print(['result', result]);
+      List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
+        calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
+        exercisesRequests.getAllBodyRegions(),
+        exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
+      ]);
+      print(['result', result]);
 
-        // Map<String, dynamic> calendar = await calendarRequests.getAllWorkouts(user['userID'], user['tokenID']);
-        // Map<String, dynamic> bodyRegions = await exercisesRequests.getAllBodyRegions();
-        // Map<String, dynamic> exercises = await exercisesRequests.getAllExercises(user['userID'], user['tokenID']);
+      // Map<String, dynamic> calendar = await calendarRequests.getAllWorkouts(user['userID'], user['tokenID']);
+      // Map<String, dynamic> bodyRegions = await exercisesRequests.getAllBodyRegions();
+      // Map<String, dynamic> exercises = await exercisesRequests.getAllExercises(user['userID'], user['tokenID']);
 
-        // authRequests.refreshToken(userData.get('userID')).then((user) {
-        //   userData.putAll({
-        //     'tokenID': user['tokenID'],
-        //     'lastUpdate': user['lastUpdate'],
-        //     'userID': user['userID'],
-        //   });
-        // });
+      // authRequests.refreshToken(userData.get('userID')).then((user) {
+      //   userData.putAll({
+      //     'tokenID': user['tokenID'],
+      //     'lastUpdate': user['lastUpdate'],
+      //     'userID': user['userID'],
+      //   });
+      // });
 
-        return StartPageEnum.Home;
-      } else {
-        return StartPageEnum.Auth;
+      return StartPageEnum.Home;
+    } else {
+      print(6);
+      return StartPageEnum.Auth;
+    }
+  }
+
+  bool isInvalidBoxData(dynamic iterableboxData) {
+    bool ifSomethingIsNull = false;
+    void iterateUserData(value) {
+      if(value == null) {
+        ifSomethingIsNull = true;
       }
+    }
+    iterableboxData.forEach(iterateUserData);
+    return ifSomethingIsNull;
   }
 
   @override
@@ -97,27 +112,30 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     // return FutureBuilder<Box<dynamic>>(
     return FutureBuilder<List<dynamic>>(
       future: Future.wait([
-        Hive.openBox('user2'),
-        Hive.openBox('calendar'),
-        Hive.openBox('exercises'),
+        Hive.openBox(userDataBoxName),
+        Hive.openBox(calendarDataBoxName),
+        Hive.openBox(exercisesDataBoxName),
       ]),
       // future: Hive.openBox('user2'),
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         if (snapshot.hasData) {
           return ValueListenableBuilder(
-            valueListenable: Hive.box('user2').listenable(),
-            builder: (BuildContext context, Box<dynamic> box, Widget child) {
-              // print(box.values);
-              bool ifSomethingIsNull = false;
-              if(box.values.isEmpty == false) {
-                void iterateUserData(value) {
-                  if(value == null) {
-                    ifSomethingIsNull = true;
-                  }
-                }
-                box.values.forEach(iterateUserData);
-              }
-              if (ifSomethingIsNull == true) {
+            valueListenable: Hive.box(userDataBoxName).listenable(),
+            builder: (BuildContext context, Box<dynamic> userDataBox, Widget child) {
+              print(1);
+              Box<dynamic> calendarDataBox = Hive.box(calendarDataBoxName);
+              Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
+              // If we have some some box empty or we have `null` as one of the value of one of the box
+              print(calendarDataBox.values);
+              if(
+                userDataBox.values.length == 0 ||
+                calendarDataBox.values.length == 0 ||
+                exercisesDataBox.values.length == 0 ||
+                (userDataBox.values.length > 0 && isInvalidBoxData(userDataBox.values) == true) || 
+                (calendarDataBox.values.length > 0 && isInvalidBoxData(calendarDataBox.values) == true) || 
+                (exercisesDataBox.values.length > 0 && isInvalidBoxData(exercisesDataBox.values) == true)
+              ) {
+                print(2);
                 return FutureBuilder<StartPageEnum>(
                   future: getUserData(),
                   builder: (BuildContext context, AsyncSnapshot<StartPageEnum> snapshot) {
@@ -154,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                   },
                 );            
               } else {
+                print(3);
                 return getCommonHomePage(context, _tabController);
               }
             },

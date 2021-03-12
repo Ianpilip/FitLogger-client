@@ -6,6 +6,8 @@ import 'package:hive/hive.dart';
 import 'package:FitLogger/requests/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:FitLogger/constants/hive_boxes_names.dart';
+
 class AuthorizationPage extends StatefulWidget {
   @override
   _AuthorizationPageState createState() => _AuthorizationPageState();
@@ -159,7 +161,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           _emailController.clear();
           _passwordController.clear();
 
-          Box<dynamic> userData = Hive.box('user2');
+          Box<dynamic> userData = Hive.box(userDataBoxName);
           // Not put it in await function, because there is no need in it
           AuthRequests authRequests = AuthRequests();
           authRequests.refreshToken(response['body']['userID']).then((user) {
