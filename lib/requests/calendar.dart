@@ -1,6 +1,7 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
+
+import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 class CalendarRequests {
   final Map<String, int> date;
 
@@ -77,6 +78,13 @@ class CalendarRequests {
 
     // return Future.delayed(Duration(milliseconds: 600), () => this.date);
     return this.date;
+  }
+
+  Future<Map<String, dynamic>> getAllWorkouts(String userID, String tokenID) async{
+    String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-all/\$userID/\$tokenID';
+    Response response = await get(url);
+    Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    return jsonDecoded;
   }
 
 }

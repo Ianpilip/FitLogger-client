@@ -11,6 +11,8 @@ import 'package:hive/hive.dart';
 // import 'package:FitLogger/sub-views/show_general_dialog.dart';
 import 'package:FitLogger/constants/start_page_enum.dart';
 import 'package:FitLogger/requests/auth.dart';
+import 'package:FitLogger/requests/exercises.dart';
+import 'package:FitLogger/requests/calendar.dart';
 
 import 'package:FitLogger/sub-views/home_page_common.dart';
 import 'package:FitLogger/sub-views/home_page_auth.dart';
@@ -41,8 +43,10 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
     Future<StartPageEnum> getUserData() async {
-      // await Hive.openBox('user1');
+      print('HERE');
       Box<dynamic> userData = Hive.box('user2');
+      Box<dynamic> calendarData = Hive.box('calendar');
+      Box<dynamic> exercisesData = Hive.box('exercises');
       if(
         userData.get('tokenID') != null &&
         userData.get('lastUpdate') != null &&
@@ -56,13 +60,28 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         
         // Not put it in await function, because there is no need in it
         AuthRequests authRequests = AuthRequests();
-        authRequests.refreshToken(userData.get('userID')).then((user) {
-          userData.putAll({
-            'tokenID': user['tokenID'],
-            'lastUpdate': user['tokenID'],
-            'userID': user['userID'],
-          });
-        });
+        CalendarRequests calendarRequests = CalendarRequests();
+        ExercisesRequests exercisesRequests = ExercisesRequests();
+        Map<String, dynamic> user = await authRequests.refreshToken(userData.get('userID'));
+
+        List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
+          calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
+          exercisesRequests.getAllBodyRegions(),
+          exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
+        ]);
+        print(['result', result]);
+
+        // Map<String, dynamic> calendar = await calendarRequests.getAllWorkouts(user['userID'], user['tokenID']);
+        // Map<String, dynamic> bodyRegions = await exercisesRequests.getAllBodyRegions();
+        // Map<String, dynamic> exercises = await exercisesRequests.getAllExercises(user['userID'], user['tokenID']);
+
+        // authRequests.refreshToken(userData.get('userID')).then((user) {
+        //   userData.putAll({
+        //     'tokenID': user['tokenID'],
+        //     'lastUpdate': user['lastUpdate'],
+        //     'userID': user['userID'],
+        //   });
+        // });
 
         return StartPageEnum.Home;
       } else {
@@ -80,7 +99,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       future: Future.wait([
         Hive.openBox('user2'),
         Hive.openBox('calendar'),
-        Hive.openBox('bodyRegions'),
         Hive.openBox('exercises'),
       ]),
       // future: Hive.openBox('user2'),
@@ -89,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           return ValueListenableBuilder(
             valueListenable: Hive.box('user2').listenable(),
             builder: (BuildContext context, Box<dynamic> box, Widget child) {
-              print(box.values);
+              // print(box.values);
               bool ifSomethingIsNull = false;
               if(box.values.isEmpty == false) {
                 void iterateUserData(value) {
