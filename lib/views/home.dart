@@ -65,7 +65,29 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       AuthRequests authRequests = AuthRequests();
       CalendarRequests calendarRequests = CalendarRequests();
       ExercisesRequests exercisesRequests = ExercisesRequests();
-      Map<String, dynamic> user = await authRequests.refreshToken(userData.get('userID'));
+
+      Map<String, dynamic> user = {
+        'tokenID': userData.get('tokenID'),
+        'lastUpdate': userData.get('lastUpdate'),
+        'userID': userData.get('userID')
+      };
+
+      // This check is needed defined if we was returned here after auth page
+      // To avoid infinite loop (if we'll always refresh the token),
+      // we need to check if the token is older than 10 seconds
+      // Why 10 seconds? It is for cases, if we'll have a delay of server response
+      if(nowInMilliseconds - lastTokenUpdateInMilliseconds > 10000) {
+        user = await authRequests.refreshToken(userData.get('userID'));
+        user = user['body'];
+        // authRequests.refreshToken(userData.get('userID')).then((res) {
+          userData.putAll({
+            'tokenID': user['tokenID'],
+            'lastUpdate': user['lastUpdate'],
+            'userID': user['userID'],
+          });
+        // });
+      }
+      
 
       List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
         calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
@@ -78,13 +100,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       // Map<String, dynamic> bodyRegions = await exercisesRequests.getAllBodyRegions();
       // Map<String, dynamic> exercises = await exercisesRequests.getAllExercises(user['userID'], user['tokenID']);
 
-      // authRequests.refreshToken(userData.get('userID')).then((user) {
-      //   userData.putAll({
-      //     'tokenID': user['tokenID'],
-      //     'lastUpdate': user['lastUpdate'],
-      //     'userID': user['userID'],
-      //   });
-      // });
+
 
       return StartPageEnum.Home;
     } else {
@@ -127,6 +143,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
               // If we have some some box empty or we have `null` as one of the value of one of the box
               print(calendarDataBox.values);
+              print(userDataBox.values);
               if(
                 userDataBox.values.length == 0 ||
                 calendarDataBox.values.length == 0 ||

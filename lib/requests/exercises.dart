@@ -12,7 +12,7 @@ class ExercisesRequests {
   }
 
   Future<Map<String, dynamic>> getAllExercises(String userID, String tokenID) async{
-    String url = LogicSettings.urlAddressToSendRequests + '/exercise/get-all/\$userID/\$tokenID';
+    String url = LogicSettings.urlAddressToSendRequests + '/exercise/get-all/$userID/$tokenID';
     Response response = await get(url);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;

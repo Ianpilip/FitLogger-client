@@ -3,6 +3,7 @@ import 'package:FitLogger/views/calendar.dart' as Calendar;
 import 'package:FitLogger/views/exercises.dart';
 import 'package:FitLogger/views/trainings.dart';
 import 'package:hive/hive.dart';
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 
 Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
   return Scaffold(
@@ -16,7 +17,7 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
           GestureDetector(
             child: Icon(Icons.logout, size: 30.0, color: Colors.black87,),
             onTap: () {
-              Box<dynamic> userData = Hive.box('user2');
+              Box<dynamic> userData = Hive.box(userDataBoxName);
               userData.putAll({
                 'tokenID': null,
                 'lastUpdate': null,

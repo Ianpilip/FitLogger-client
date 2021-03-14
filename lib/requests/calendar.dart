@@ -81,7 +81,7 @@ class CalendarRequests {
   }
 
   Future<Map<String, dynamic>> getAllWorkouts(String userID, String tokenID) async{
-    String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-all/\$userID/\$tokenID';
+    String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-all/$userID/$tokenID';
     Response response = await get(url);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
