@@ -170,7 +170,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               'lastUpdate': user['body']['lastUpdate'],
               'userID': user['body']['userID'],
             });
-            print(['Update Hive with userTokenID!', user]);
+            // print(['Update Hive with userTokenID!', user]);
           });
         }
         if(response['body']['text'] != null) {

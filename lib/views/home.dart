@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'dart:ui';
 import 'package:hive/hive.dart';
-import 'dart:collection';
 
 // import 'package:FitLogger/views/calendar.dart' as Calendar;
 // import 'package:FitLogger/views/exercises.dart';
@@ -45,31 +44,31 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   }
 
   Future<StartPageEnum> getUserData() async {
-    print(4);
-    Box<dynamic> userData = Hive.box(userDataBoxName);
-    Box<dynamic> calendarData = Hive.box(calendarDataBoxName);
-    Box<dynamic> exercisesData = Hive.box(exercisesDataBoxName);
+    print('getUserData() was called');
+    Box<dynamic> userDataBox = Hive.box(userDataBoxName);
+    Box<dynamic> calendarDataBox = Hive.box(calendarDataBoxName);
+    Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
     if(
-      userData.get('tokenID') != null &&
-      userData.get('lastUpdate') != null &&
-      userData.get('userID') != null
+      userDataBox.get('tokenID') != null &&
+      userDataBox.get('lastUpdate') != null &&
+      userDataBox.get('userID') != null
     ) {
-      print(5);
-      int lastTokenUpdateInMilliseconds = DateTime.parse(userData.get('lastUpdate')).millisecondsSinceEpoch;
+      // If the last usage (refresh token) was earlier than 30 days ago, make auth again
+      int lastTokenUpdateInMilliseconds = DateTime.parse(userDataBox.get('lastUpdate')).millisecondsSinceEpoch;
       int nowInMilliseconds = DateTime.now().millisecondsSinceEpoch;
       int maxPermissibleDifferenceInMilliseconds = LogicSettings.lastRefreshToken;
       int currentDifferenceInMilliseconds = (nowInMilliseconds - lastTokenUpdateInMilliseconds) - maxPermissibleDifferenceInMilliseconds;
       if(currentDifferenceInMilliseconds > 0) return StartPageEnum.Auth;
+      //
       
-      // Not put it in await function, because there is no need in it
       AuthRequests authRequests = AuthRequests();
       CalendarRequests calendarRequests = CalendarRequests();
       ExercisesRequests exercisesRequests = ExercisesRequests();
 
       Map<String, dynamic> user = {
-        'tokenID': userData.get('tokenID'),
-        'lastUpdate': userData.get('lastUpdate'),
-        'userID': userData.get('userID')
+        'tokenID': userDataBox.get('tokenID'),
+        'lastUpdate': userDataBox.get('lastUpdate'),
+        'userID': userDataBox.get('userID')
       };
 
       // This check is needed defined if we was returned here after auth page
@@ -77,24 +76,35 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       // we need to check if the token is older than 10 seconds
       // Why 10 seconds? It is for cases, if we'll have a delay of server response
       if(nowInMilliseconds - lastTokenUpdateInMilliseconds > 10000) {
-        user = await authRequests.refreshToken(userData.get('userID'));
+        user = await authRequests.refreshToken(userDataBox.get('userID'));
         user = user['body'];
-        // authRequests.refreshToken(userData.get('userID')).then((res) {
-          userData.putAll({
-            'tokenID': user['tokenID'],
-            'lastUpdate': user['lastUpdate'],
-            'userID': user['userID'],
-          });
-        // });
+        userDataBox.putAll({
+          'tokenID': user['tokenID'],
+          'lastUpdate': user['lastUpdate'],
+          'userID': user['userID'],
+        });
       }
       
+      if(calendarDataBox.values.length == 0 || isInvalidBoxData(calendarDataBox.values) == true) {
+        calendarRequests.getAllWorkouts(user['userID'], user['tokenID']).then((workouts) {
+          calendarDataBox.put('workouts', workouts['body']['workouts']);
+        });
+      }
 
-      List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
-        calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
-        exercisesRequests.getAllBodyRegions(),
-        exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
-      ]);
-      print(['result', result]);
+      if(exercisesDataBox.values.length == 0 || isInvalidBoxData(exercisesDataBox.values) == true) {
+        exercisesRequests.getAllExercises(user['userID'], user['tokenID']).then((exercises) {
+          exercisesDataBox.put('exercises', exercises['body']['exercises']);
+        });
+      }
+      
+      // List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([
+      //   calendarRequests.getAllWorkouts(user['userID'], user['tokenID']),
+      //   exercisesRequests.getAllBodyRegions(),
+      //   exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
+      // ]);
+      // print(['workouts', result[0]['body']]);
+      // print(['bodyregions', result[1]['body']]);
+      // print(['exercises', result[2]['body']]);
 
       // Map<String, dynamic> calendar = await calendarRequests.getAllWorkouts(user['userID'], user['tokenID']);
       // Map<String, dynamic> bodyRegions = await exercisesRequests.getAllBodyRegions();
@@ -104,7 +114,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
       return StartPageEnum.Home;
     } else {
-      print(6);
       return StartPageEnum.Auth;
     }
   }
@@ -138,21 +147,17 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           return ValueListenableBuilder(
             valueListenable: Hive.box(userDataBoxName).listenable(),
             builder: (BuildContext context, Box<dynamic> userDataBox, Widget child) {
-              print(1);
               Box<dynamic> calendarDataBox = Hive.box(calendarDataBoxName);
               Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
               // If we have some some box empty or we have `null` as one of the value of one of the box
-              print(calendarDataBox.values);
-              print(userDataBox.values);
               if(
                 userDataBox.values.length == 0 ||
                 calendarDataBox.values.length == 0 ||
                 exercisesDataBox.values.length == 0 ||
-                (userDataBox.values.length > 0 && isInvalidBoxData(userDataBox.values) == true) || 
-                (calendarDataBox.values.length > 0 && isInvalidBoxData(calendarDataBox.values) == true) || 
-                (exercisesDataBox.values.length > 0 && isInvalidBoxData(exercisesDataBox.values) == true)
+                isInvalidBoxData(userDataBox.values) == true || 
+                isInvalidBoxData(calendarDataBox.values) == true || 
+                isInvalidBoxData(exercisesDataBox.values) == true
               ) {
-                print(2);
                 return FutureBuilder<StartPageEnum>(
                   future: getUserData(),
                   builder: (BuildContext context, AsyncSnapshot<StartPageEnum> snapshot) {
@@ -189,7 +194,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                   },
                 );            
               } else {
-                print(3);
                 return getCommonHomePage(context, _tabController);
               }
             },
