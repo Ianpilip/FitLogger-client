@@ -4,10 +4,14 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:FitLogger/constants/ui_settings.dart' as UiSettings;
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 import 'package:FitLogger/sub-views/show_calendar_dialog.dart';
 import 'package:FitLogger/requests/calendar.dart';
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -220,7 +224,14 @@ class _CalendarPageState extends State<CalendarPage> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
                       child: GestureDetector(
-                        child: calendar.buildTableCalendar(_year, _month, _startWeekDay, _changePreviewDayHint)
+                        child: 
+                          ValueListenableBuilder(
+                            valueListenable: Hive.box(calendarDataBoxName).listenable(),
+                            builder: (BuildContext context, Box<dynamic> calendarDataBox, Widget child) {
+                              return Calendar(workouts: calendarDataBox.get('workouts')).buildTableCalendar(_year, _month, _startWeekDay, _changePreviewDayHint);
+                            },
+                          )
+                        // calendar.buildTableCalendar(_year, _month, _startWeekDay, _changePreviewDayHint)
                       )
                     );
                   },
