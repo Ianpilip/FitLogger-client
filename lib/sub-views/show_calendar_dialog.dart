@@ -14,10 +14,15 @@ class ShowCalendarDialog {
 
   ShowCalendarDialog({this.calendarRequests});
 
+  Map<String, dynamic> data = {
+    'comment': ''
+  };
+
   void show(BuildContext context) {
       VoidCallback callbackConfirm = () => {
         Navigator.of(context).pop(),
-        print('_exersiseNameController.text')
+        print('_exersiseNameController.text'),
+        print(data)
       };
 
       VoidCallback callbackCancel = () => {
@@ -26,9 +31,19 @@ class ShowCalendarDialog {
       };
 
       Widget buildContent() {
-        
-        // Map<String, int> data = 
-        return Text(this.calendarRequests.date['year'].toString());
+        print(data);
+        return Column(
+          children: [
+            GestureDetector(
+              child: Text('TAP'),
+              onTap: () {
+                data['comment'] = 'some text here';
+              }
+            ),
+            Text(this.calendarRequests.date['year'].toString())
+          ],
+        );
+        // return Text(this.calendarRequests.date['year'].toString());
       }
 
       // dynamic callback = (dynamic data) => {

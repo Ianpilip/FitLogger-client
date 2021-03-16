@@ -21,7 +21,8 @@ class FutureBuilderDialog extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<Map<String, int>> snapshot) {
         Widget _dialogContent;
         if (snapshot.hasData) {
-          _dialogContent = Text('${snapshot.data["dayOfMonth"]}');
+          // _dialogContent = Text('${snapshot.data["dayOfMonth"]}');
+          _dialogContent = this.content;
         } else if (snapshot.hasError) {
           _dialogContent = Column(
             // mainAxisSize: MainAxisSize.min,

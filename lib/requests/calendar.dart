@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:hive/hive.dart';
 
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 class CalendarRequests {
   final Map<String, int> date;
+  Box<dynamic> userDataBox = Hive.box(userDataBoxName);
 
   CalendarRequests({this.date});
 
@@ -78,6 +81,32 @@ class CalendarRequests {
 
     // return Future.delayed(Duration(milliseconds: 600), () => this.date);
     return this.date;
+  }
+
+  Future<Map<String, dynamic>> createUpdateDeleteWorkout(
+    int year,
+    int month,
+    int day,
+    List<Map<String, dynamic>> exercises,
+    int color,
+    String comment,
+    String action
+  ) async{
+    String json = jsonEncode(<String, dynamic>{
+      'year': year,
+      'month': month,
+      'day': day,
+      'userID': userDataBox.get('userID'),
+      'exercises': exercises,
+      'color': color,
+      'comment': comment,
+      'action': action
+    });
+    String url = 'http://localhost:3000/calendar/new-training-day';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Response response = await post(url, headers: headers, body: json);
+    Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    return jsonDecoded;
   }
 
   Future<Map<String, dynamic>> getAllWorkouts(String userID, String tokenID) async{
