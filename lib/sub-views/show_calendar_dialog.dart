@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:FitLogger/requests/calendar.dart';
 import 'package:FitLogger/sub-views/future_builder_dialog.dart';
 import 'package:FitLogger/sub-views/wrapper_dialog.dart';
+import 'package:FitLogger/forms/workouts.dart';
 
 class ShowCalendarDialog {
   // final Map<String, int> date;
@@ -13,6 +14,8 @@ class ShowCalendarDialog {
   final CalendarRequests calendarRequests;
 
   ShowCalendarDialog({this.calendarRequests});
+
+  TextEditingController _workoutCommentController = TextEditingController();
 
   Map<String, dynamic> data = {
     'comment': ''
@@ -31,18 +34,23 @@ class ShowCalendarDialog {
       };
 
       Widget buildContent() {
-        print(data);
-        return Column(
-          children: [
-            GestureDetector(
-              child: Text('TAP'),
-              onTap: () {
-                data['comment'] = 'some text here';
-              }
-            ),
-            Text(this.calendarRequests.date['year'].toString())
-          ],
+        return WorkoutForm(
+          hint: "Workout duration 1h 15m",
+          workoutCommentController: _workoutCommentController,
+          data: data
         );
+        // return Column(
+        //   children: [
+        //     GestureDetector(
+        //       child: Text('TAP'),
+        //       onTap: () {
+        //         data['comment'] = 'some text here';
+        //       }
+        //     ),
+        //     Text(this.calendarRequests.date['year'].toString())
+        //   ],
+        // );
+
         // return Text(this.calendarRequests.date['year'].toString());
       }
 

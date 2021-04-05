@@ -92,9 +92,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       }
 
       if(exercisesDataBox.values.length == 0 || isInvalidBoxData(exercisesDataBox.values) == true) {
-        exercisesRequests.getAllExercises(user['userID'], user['tokenID']).then((exercises) {
-          exercisesDataBox.put('exercises', exercises['body']['exercises']);
-        });
+        exercisesRequests.getAllExercises(user['userID'], user['tokenID'])
+          .then((exercises) {
+            exercisesDataBox.put('exercises', exercises['body']['exercises']);
+          })
+          .then((p) {
+            Future<Map<String, dynamic>> bodyRegions = exercisesRequests.getAllBodyRegions();
+            return bodyRegions;
+          })
+          .then((bodyRegions) {
+            exercisesDataBox.put('bodyRegions', bodyRegions['body']['bodyRegions']);
+          })
+          .catchError((err) => print(err) );
       }
       
       // List<Map<String, dynamic>> result = await Future.wait<Map<String, dynamic>>([

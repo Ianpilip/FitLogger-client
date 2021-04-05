@@ -63,7 +63,7 @@ class BlurryDialog extends StatelessWidget {
                       shape: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Text("Continue", style: TextStyle(color: Colors.black87, fontSize: 18)),
+                      child: Text("Save", style: TextStyle(color: Colors.black87, fontSize: 18)),
                       onPressed: () {
                         callbackConfirm();
                       },
