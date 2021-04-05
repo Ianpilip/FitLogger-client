@@ -18,4 +18,28 @@ class ExercisesRequests {
     return jsonDecoded;
   }
 
+  Future<Map<String, dynamic>> createUpdateExercise(
+    String name,
+    String exerciseID,
+    String regionID,
+    String userID,
+    bool showInUI,
+    bool update
+  ) async{
+    String json = jsonEncode(<String, dynamic>{
+      'name': name,
+      'exerciseID': exerciseID,
+      'regionID': regionID,
+      'userID': userID,
+      'showInUI' : showInUI,
+      'update': update
+    });
+    String url = 'http://localhost:3000/exercise/new-exercise';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Response response = await post(url, headers: headers, body: json);
+    Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    print(jsonDecoded);
+    return jsonDecoded;
+  }
+
 }

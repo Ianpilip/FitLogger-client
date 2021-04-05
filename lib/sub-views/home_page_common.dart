@@ -101,12 +101,12 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                       text: TextSpan(
                         children: [
                           WidgetSpan(
-                            child: Icon(Icons.format_list_numbered)
+                            child: Icon(Icons.history)
                           ),
                         ],
                       )
                     ),
-                    Text('Trainings')
+                    Text('History')
                   ]
                 )
               )

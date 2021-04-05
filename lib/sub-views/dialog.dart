@@ -41,7 +41,8 @@ class BlurryDialog extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(30.0))
           ),
           title: title != null ? Center(child: Text(title, style: textStyle)) : title,
-          insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
+          // insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
+          insetPadding: EdgeInsets.symmetric(horizontal: 10),
           content: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

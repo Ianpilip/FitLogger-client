@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:hive/hive.dart';
 
 // import 'package:FitLogger/widgets/alert.dart';
 import 'package:FitLogger/sub-views/dialog.dart';
 import 'package:FitLogger/forms/exercises.dart';
-import 'package:decorated_icon/decorated_icon.dart';
+import 'package:FitLogger/requests/exercises.dart';
 
-
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 class Exercises extends StatelessWidget {
   
+  // Maybe TextEditingController should be moved directly to lib/forms/exercises.dart
   TextEditingController _exersiseNameController = TextEditingController();
+  ExercisesRequests exercisesRequests = ExercisesRequests();
+  Box<dynamic> userDataBox = Hive.box(userDataBoxName);
+
+  Map<String, dynamic> data = {
+    'exerciseName': '',
+    'bodyRegionID': '',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +26,15 @@ class Exercises extends StatelessWidget {
   // Navigator.of(context).pop() removes alert dialog
   VoidCallback callbackConfirm = () => {
     Navigator.of(context).pop(),
-    print(_exersiseNameController.text),
+    // print(_exersiseNameController.text),
+    exercisesRequests.createUpdateExercise(
+      data['exerciseName'],
+      '',
+      data['bodyRegionID'],
+      userDataBox.get('userID'),
+      true,
+      false
+    ),
     _exersiseNameController.clear()
   };
 
@@ -31,7 +48,8 @@ class Exercises extends StatelessWidget {
     title: "Add new exercises",
     content: ExerciseForm(
       hint: "Bench press",
-      exersiseNameController: _exersiseNameController
+      exersiseNameController: _exersiseNameController,
+      data: data
     ),
     callbackConfirm: callbackConfirm,
     callbackCancel: callbackCancel
