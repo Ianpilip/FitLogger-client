@@ -23,22 +23,19 @@ class ExercisesRequests {
     String exerciseID,
     String regionID,
     String userID,
-    bool showInUI,
-    bool update
+    bool showInUI
   ) async{
     String json = jsonEncode(<String, dynamic>{
       'name': name,
       'exerciseID': exerciseID,
       'regionID': regionID,
       'userID': userID,
-      'showInUI' : showInUI,
-      'update': update
+      'showInUI' : showInUI
     });
     String url = 'http://localhost:3000/exercise/new-exercise';
     Map<String, String> headers = {"Content-type": "application/json"};
     Response response = await post(url, headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
-    print(jsonDecoded);
     return jsonDecoded;
   }
 
