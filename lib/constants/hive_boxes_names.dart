@@ -1,3 +1,3 @@
-const String userDataBoxName = 'user6';
-const String calendarDataBoxName = 'calendar6';
-const String exercisesDataBoxName = 'exercises6';
+const String userDataBoxName = 'user';
+const String calendarDataBoxName = 'calendar';
+const String exercisesDataBoxName = 'exercises';

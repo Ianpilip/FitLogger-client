@@ -8,6 +8,8 @@ import 'package:FitLogger/helpers/custom_material_color.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:FitLogger/constants/hive_boxes_names.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
@@ -19,6 +21,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+// Hive.box(userDataBoxName).clear();
+// Hive.box(exercisesDataBoxName).clear();
+// Hive.box(calendarDataBoxName).clear();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
