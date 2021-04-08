@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:FitLogger/sub-views/dialog.dart';
 import 'dart:ui';
 
-BlurryDialog setInvisibleExerciseDialog(BuildContext context, Function callbackConfirm, Map<String, dynamic>exercise) {
+BlurryDialog setInvisibleExerciseDialog(BuildContext context, Function callbackConfirm, Map<dynamic, dynamic>exercise) {
   // VoidCallback callbackConfirm = () {
   //   Navigator.of(context).pop();
   //   print('Send a query to make it invisible');

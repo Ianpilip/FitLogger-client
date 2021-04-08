@@ -22,6 +22,7 @@ class Exercises extends StatelessWidget {
 
   Map<String, dynamic> data = {
     'exerciseName': '',
+    'exerciseID': '',
     'bodyRegionID': '',
     'showInUI': true,
   };
@@ -29,7 +30,7 @@ class Exercises extends StatelessWidget {
   void createUpdateExercise() {
     exercisesRequests.createUpdateExercise(
       data['exerciseName'],
-      '',
+      data['exerciseID'],
       data['bodyRegionID'],
       userDataBox.get('userID'),
       data['showInUI']
@@ -47,6 +48,7 @@ class Exercises extends StatelessWidget {
       } else {
         exercisesRequests.getAllExercises(userDataBox.get('userID'), userDataBox.get('tokenID'))
           .then((exercises) {
+            print(exercises['body']['exercises']);
             exercisesDataBox.put('exercises', exercises['body']['exercises']);
           });
         Fluttertoast.showToast(
@@ -96,35 +98,53 @@ class Exercises extends StatelessWidget {
         builder: (context, exercisesDataBox, _) {
           return Stack(
             children: <Widget>[
-              ListView(
-              children: exercisesDataBox.get('exercises')
-                // We need here `.map<Widget>((exercise)` instead of `.map((exercise)` because we have not primitive type inside list in a children prop above
-                .map<Widget>((exercise) => ListTile(
-                  title: Text(exercise['name']),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        child: Icon(Icons.visibility_off),
-                        onTap: () {
-                          VoidCallback callbackConfirm = () {
-                            Navigator.of(context).pop();
-                            data['exerciseName'] = exercise['name'];
-                            data['exerciseID'] = exercise['_id'];
-                            data['bodyRegionID'] = exercise['regionID'];
-                            data['showInUI'] = false;
-                            createUpdateExercise();
-                          };
-                          BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercise);
-                          callShowGeneralDialog(context, _alert);
-                        },
-                      ),
-                      SizedBox(width: 25),
-                      Icon(Icons.edit),
-                    ],
+              Column(
+                children: <Widget>[
+                  ListView(
+                    shrinkWrap: true,
+                    children: exercisesDataBox.get('exercises')
+                      // We need here `.map<Widget>((exercise)` instead of `.map((exercise)` because we have not primitive type inside list in a children prop above
+                      .map<Widget>((exercise) => ListTile(
+                        title: Text(exercise['name']),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                              child: Icon(Icons.visibility_off),
+                              onTap: () {
+                                VoidCallback callbackConfirm = () {
+                                  Navigator.of(context).pop();
+                                  data['exerciseName'] = exercise['name'];
+                                  data['exerciseID'] = exercise['_id'];
+                                  data['bodyRegionID'] = exercise['regionID'];
+                                  data['showInUI'] = false;
+                                  createUpdateExercise();
+                                };
+                                BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercise);
+                                callShowGeneralDialog(context, _alert);
+                              },
+                            ),
+                            SizedBox(width: 25),
+                            Icon(Icons.edit),
+                          ],
+                        ),
+                      ))
+                      .toList(),
                   ),
-                ))
-                .toList(),
+                  SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('See all exercises'),
+                      Checkbox(
+                        checkColor: Colors.black54,
+                        value: true,
+                        onChanged: (bool value) {
+                        },
+                      )
+                    ],
+                  )
+                ]
               ),
               Positioned(
                 right: 0,
@@ -158,7 +178,7 @@ class Exercises extends StatelessWidget {
                     ),
                   )
                 )
-                ),
+              ),
             ],
           );
         }
