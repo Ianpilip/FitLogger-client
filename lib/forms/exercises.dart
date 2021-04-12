@@ -9,10 +9,10 @@ import 'package:FitLogger/constants/hive_boxes_names.dart';
 
 class ExerciseForm extends StatefulWidget {
   final String hint;
-  final TextEditingController exersiseNameController;
+  TextEditingController exersiseNameController;
   final Map<String, dynamic> data;
 
-  const ExerciseForm({Key key, this.hint, this.exersiseNameController, this.data}): super(key: key);
+  ExerciseForm({Key key, this.hint, this.exersiseNameController, this.data}): super(key: key);
 
   @override
   _ExerciseFormState createState() => _ExerciseFormState();
@@ -28,6 +28,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
   Box<dynamic> exercisesData;
   List<dynamic> exercises;
   List<dynamic> bodyRegions;
+  int _symbolsRemains;
 
   @override
   void initState() {
@@ -35,8 +36,19 @@ class _ExerciseFormState extends State<ExerciseForm> {
     exercisesData = Hive.box(exercisesDataBoxName);
     exercises = exercisesData.get('exercises');
     bodyRegions = exercisesData.get('bodyRegions');
-    bodyRegionController = FixedExtentScrollController(initialItem: 0);
-    widget.data['bodyRegionID'] = bodyRegions[0]['_id'];
+    int bodyRegionInitialItem = 0;
+    String bodyRegionInitialValue = bodyRegions[0]['_id'];
+    for (int i = 0; i < bodyRegions.length; i++) {
+      if(bodyRegions[i]['_id'] == widget.data['bodyRegionID']) {
+        bodyRegionInitialItem = i;
+        bodyRegionInitialValue = bodyRegions[i]['_id'];
+      }
+    }
+    bodyRegionController = FixedExtentScrollController(initialItem: bodyRegionInitialItem);
+    widget.data['bodyRegionID'] = bodyRegionInitialValue;
+    widget.exersiseNameController.text = widget.data['exerciseName'];
+    _symbolsRemains = widget.exersiseNameController.text.length > 0 ? LogicSettings.exerciseNameLength - widget.exersiseNameController.text.length : LogicSettings.exerciseNameLength;
+    // widget.data['bodyRegionID'] = bodyRegions[0]['_id'];
   }
 
   @override
@@ -52,7 +64,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
   }
 
 
-  int _symbolsRemains = LogicSettings.exerciseNameLength;
+  
   String _maxAvailableExerciseNameText;
   // static Box<dynamic> exercisesData = Hive.box(exercisesDataBoxName);
   // static List<dynamic> exercises = exercisesData.get('exercises');
@@ -73,10 +85,12 @@ class _ExerciseFormState extends State<ExerciseForm> {
             setState(() {
               _symbolsRemains = isSymbolsRemainsIsBiggerThanZero;
             });
-            if(isSymbolsRemainsIsBiggerThanZero == 0) {
-              _maxAvailableExerciseNameText = controller.text;
-            }
+            // if(isSymbolsRemainsIsBiggerThanZero == 0) {
+            //   _maxAvailableExerciseNameText = controller.text;
+            // }
             if(isSymbolsRemainsIsBiggerThanZero < 0) {
+              // It is needed here because we can edit an exercise which has a name of exactly 70 characters, so we need to slice it
+              _maxAvailableExerciseNameText = controller.text.substring(0, LogicSettings.exerciseNameLength);
               setState(() {
                 _symbolsRemains = 0;
               });
@@ -90,6 +104,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
           },
           keyboardType: TextInputType.multiline,
           maxLines: 3,
+          // controller: controller,
           controller: controller,
           style: TextStyle(fontSize: 20, color: Colors.black),
           decoration: InputDecoration(
