@@ -12,13 +12,20 @@ import 'package:FitLogger/requests/exercises.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 import 'package:FitLogger/sub-views/prompt_invisible_exercise.dart';
 import 'package:FitLogger/sub-views/show_general_dialog.dart';
-class Exercises extends StatelessWidget {
+
+class Exercises extends StatefulWidget {
+  @override
+  _ExercisesState createState() => _ExercisesState();
+}
+
+class _ExercisesState extends State<Exercises> {
   
   // Maybe TextEditingController should be moved directly to lib/forms/exercises.dart
   TextEditingController _exersiseNameController = TextEditingController();
   ExercisesRequests exercisesRequests = ExercisesRequests();
   Box<dynamic> userDataBox = Hive.box(userDataBoxName);
   Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
+  bool _showAllExercises = false;
 
   Map<String, dynamic> data = {
     'exerciseName': '',
@@ -26,6 +33,13 @@ class Exercises extends StatelessWidget {
     'bodyRegionID': '',
     'showInUI': true,
   };
+
+  void _changeShowAllExercises(bool value) {
+    print(value);
+    setState(() {
+      _showAllExercises = value;
+    });
+  }
 
   void createUpdateExercise() {
     exercisesRequests.createUpdateExercise(
@@ -64,6 +78,74 @@ class Exercises extends StatelessWidget {
     .catchError((err) => print(err));
   }
 
+  List<Widget> _getListOfExercises() {
+    List<ListTile> exercises = [];
+    List<ListTile> exercisesShowInUI = [];
+    List<ListTile> exercisesNotShowInUI = [];
+    for (int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
+      if(_showAllExercises == false && exercisesDataBox.get('exercises')[i]['showInUI'] == false) {
+        continue;
+      } else {
+        if(exercisesDataBox.get('exercises')[i]['showInUI'] == true) {
+          exercisesShowInUI.add(ListTile(
+            title: Text(exercisesDataBox.get('exercises')[i]['name']),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(Icons.visibility_off),
+                  onTap: () {
+                    VoidCallback callbackConfirm = () {
+                      Navigator.of(context).pop();
+                      data['exerciseName'] = exercisesDataBox.get('exercises')[i]['name'];
+                      data['exerciseID'] = exercisesDataBox.get('exercises')[i]['_id'];
+                      data['bodyRegionID'] = exercisesDataBox.get('exercises')[i]['regionID'];
+                      data['showInUI'] = !exercisesDataBox.get('exercises')[i]['showInUI'];
+                      createUpdateExercise();
+                    };
+                    BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercisesDataBox.get('exercises')[i]);
+                    callShowGeneralDialog(context, _alert);
+                  },
+                ),
+                SizedBox(width: 25),
+                Icon(Icons.edit),
+              ],
+            ),
+          ));
+        } else {
+          exercisesNotShowInUI.add(ListTile(
+            title: Text(exercisesDataBox.get('exercises')[i]['name']),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  child: Icon(Icons.visibility),
+                  onTap: () {
+                    VoidCallback callbackConfirm = () {
+                      Navigator.of(context).pop();
+                      data['exerciseName'] = exercisesDataBox.get('exercises')[i]['name'];
+                      data['exerciseID'] = exercisesDataBox.get('exercises')[i]['_id'];
+                      data['bodyRegionID'] = exercisesDataBox.get('exercises')[i]['regionID'];
+                      data['showInUI'] = !exercisesDataBox.get('exercises')[i]['showInUI'];
+                      createUpdateExercise();
+                    };
+                    BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercisesDataBox.get('exercises')[i]);
+                    callShowGeneralDialog(context, _alert);
+                  },
+                ),
+                SizedBox(width: 25),
+                Icon(Icons.edit),
+              ],
+            ),
+          ));
+        }
+      }
+    }
+
+    exercises = [...exercisesShowInUI, ...exercisesNotShowInUI];
+    return exercises;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -100,36 +182,38 @@ class Exercises extends StatelessWidget {
             children: <Widget>[
               Column(
                 children: <Widget>[
+                  SizedBox(height: 25),
                   ListView(
                     shrinkWrap: true,
-                    children: exercisesDataBox.get('exercises')
-                      // We need here `.map<Widget>((exercise)` instead of `.map((exercise)` because we have not primitive type inside list in a children prop above
-                      .map<Widget>((exercise) => ListTile(
-                        title: Text(exercise['name']),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              child: Icon(Icons.visibility_off),
-                              onTap: () {
-                                VoidCallback callbackConfirm = () {
-                                  Navigator.of(context).pop();
-                                  data['exerciseName'] = exercise['name'];
-                                  data['exerciseID'] = exercise['_id'];
-                                  data['bodyRegionID'] = exercise['regionID'];
-                                  data['showInUI'] = false;
-                                  createUpdateExercise();
-                                };
-                                BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercise);
-                                callShowGeneralDialog(context, _alert);
-                              },
-                            ),
-                            SizedBox(width: 25),
-                            Icon(Icons.edit),
-                          ],
-                        ),
-                      ))
-                      .toList(),
+                    children: _getListOfExercises(),
+                    // children: exercisesDataBox.get('exercises')
+                    //   // We need here `.map<Widget>((exercise)` instead of `.map((exercise)` because we have not primitive type inside list in a children prop above
+                    //   .map<Widget>((exercise) => ListTile(
+                    //     title: Text(exercise['name']),
+                    //     trailing: Row(
+                    //       mainAxisSize: MainAxisSize.min,
+                    //       children: [
+                    //         GestureDetector(
+                    //           child: exercise['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    //           onTap: () {
+                    //             VoidCallback callbackConfirm = () {
+                    //               Navigator.of(context).pop();
+                    //               data['exerciseName'] = exercise['name'];
+                    //               data['exerciseID'] = exercise['_id'];
+                    //               data['bodyRegionID'] = exercise['regionID'];
+                    //               data['showInUI'] = !exercise['showInUI'];
+                    //               createUpdateExercise();
+                    //             };
+                    //             BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercise);
+                    //             callShowGeneralDialog(context, _alert);
+                    //           },
+                    //         ),
+                    //         SizedBox(width: 25),
+                    //         Icon(Icons.edit),
+                    //       ],
+                    //     ),
+                    //   ))
+                    //   .toList(),
                   ),
                   SizedBox(height: 25),
                   Row(
@@ -138,9 +222,8 @@ class Exercises extends StatelessWidget {
                       Text('See all exercises'),
                       Checkbox(
                         checkColor: Colors.black54,
-                        value: true,
-                        onChanged: (bool value) {
-                        },
+                        value: _showAllExercises,
+                        onChanged: _changeShowAllExercises,
                       )
                     ],
                   )
