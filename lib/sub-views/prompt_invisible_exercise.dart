@@ -25,7 +25,7 @@ BlurryDialog setInvisibleExerciseDialog(BuildContext context, Function callbackC
           TextSpan(text: '\n\n'),
           TextSpan(text: 'You can still see it in '),
           TextSpan(text: 'See all exercises ', style: TextStyle(fontWeight: FontWeight.bold)),
-          WidgetSpan(child: Icon(Icons.preview)),
+          // WidgetSpan(child: Icon(Icons.preview)),
           TextSpan(text: ' mode'),
         ],
       ),

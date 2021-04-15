@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:hive/hive.dart';
@@ -11,6 +12,8 @@ import 'package:FitLogger/requests/exercises.dart';
 
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 import 'package:FitLogger/sub-views/prompt_invisible_exercise.dart';
+import 'package:FitLogger/sub-views/prompt_dialog.dart';
+import 'package:FitLogger/prompt-text-nodes/exercises.dart';
 import 'package:FitLogger/sub-views/show_general_dialog.dart';
 
 class Exercises extends StatefulWidget {
@@ -32,6 +35,7 @@ class _ExercisesState extends State<Exercises> {
     'exerciseID': '',
     'bodyRegionID': '',
     'showInUI': true,
+    'delete': false
   };
 
   void _changeShowAllExercises(bool value) {
@@ -41,13 +45,14 @@ class _ExercisesState extends State<Exercises> {
     });
   }
 
-  void createUpdateExercise() {
-    exercisesRequests.createUpdateExercise(
+  void createUpdateDeleteExercise() {
+    exercisesRequests.createUpdateDeleteExercise(
       data['exerciseName'],
       data['exerciseID'],
       data['bodyRegionID'],
       userDataBox.get('userID'),
-      data['showInUI']
+      data['showInUI'],
+      data['delete']
     )
     .then((response) {
       if(response['validationErrors'].length > 0) {
@@ -87,69 +92,116 @@ class _ExercisesState extends State<Exercises> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GestureDetector(
-              child: exercisesDataBox.get('exercises')[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-              onTap: () {
-                VoidCallback callbackConfirm = () {
-                  Navigator.of(context).pop();
-                  data['exerciseName'] = exercisesDataBox.get('exercises')[i]['name'];
-                  data['exerciseID'] = exercisesDataBox.get('exercises')[i]['_id'];
-                  data['bodyRegionID'] = exercisesDataBox.get('exercises')[i]['regionID'];
-                  data['showInUI'] = !exercisesDataBox.get('exercises')[i]['showInUI'];
-                  createUpdateExercise();
-                };
-                BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercisesDataBox.get('exercises')[i]);
-                callShowGeneralDialog(context, _alert);
+            PopupMenuButton<Map<String, dynamic>>(
+              icon: Icon(Icons.more_vert),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onSelected: (menu) {
+                if(menu['action'] == 'edit') {
+                  VoidCallback callbackConfirm = () {
+                    Navigator.of(context).pop();
+                    createUpdateDeleteExercise();
+                    _exersiseNameController.clear();
+                  };
+
+                  VoidCallback callbackCancel = () => {
+                    Navigator.of(context).pop(),
+                    _exersiseNameController.clear()
+                  };
+
+                  data['exerciseName'] = menu['value']['name'];
+                  data['exerciseID'] = menu['value']['_id'];
+                  data['bodyRegionID'] = menu['value']['regionID'];
+                  data['showInUI'] = menu['value']['showInUI'];
+                  BlurryDialog alert = BlurryDialog(
+                    title: "Edit an exercise",
+                    content: ExerciseForm(
+                      hint: "Bench press",
+                      exersiseNameController: _exersiseNameController,
+                      data: data
+                    ),
+                    callbackConfirm: callbackConfirm,
+                    callbackCancel: callbackCancel
+                  );
+
+                  return showGeneralDialog(
+                    barrierDismissible: true,
+                    barrierLabel: '',
+                    barrierColor: Colors.black38,
+                    transitionDuration: Duration(milliseconds: 100),
+                    pageBuilder: (ctx, anim1, anim2) => alert,
+                    transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+                            child: FadeTransition(
+                                child: child,
+                                opacity: anim1,
+                            ),
+                        ),
+                    context: context,
+                  );
+                } else if(menu['action'] == 'show') {
+                  VoidCallback callbackConfirm = () {
+                    Navigator.of(context).pop();
+                    data['exerciseName'] = menu['value']['name'];
+                    data['exerciseID'] = menu['value']['_id'];
+                    data['bodyRegionID'] = menu['value']['regionID'];
+                    data['showInUI'] = !menu['value']['showInUI'];
+                    createUpdateDeleteExercise();
+                  };
+                  RichText dataAlert = showHideExercise(menu['value']);
+                  BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
+                  // BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, menu['value']);
+                  callShowGeneralDialog(context, _alert);
+                } else if(menu['action'] == 'delete') {
+                  VoidCallback callbackConfirm = () {
+                    Navigator.of(context).pop();
+                    data['exerciseID'] = menu['value']['_id'];
+                    data['bodyRegionID'] = menu['value']['regionID'];
+                    data['delete'] = true;
+                    createUpdateDeleteExercise();
+                  };
+                  RichText dataAlert = deleteExercise(menu['value']);
+                  BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
+                  callShowGeneralDialog(context, _alert);
+                }
               },
-            ),
-            SizedBox(width: 25),
-            GestureDetector(
-              child: Icon(Icons.edit),
-              onTap: () {
-                
-                VoidCallback callbackConfirm = () {
-                  Navigator.of(context).pop();
-                  createUpdateExercise();
-                  _exersiseNameController.clear();
-                };
-
-                VoidCallback callbackCancel = () => {
-                  Navigator.of(context).pop(),
-                  _exersiseNameController.clear()
-                };
-
-                data['exerciseName'] = exercisesDataBox.get('exercises')[i]['name'];
-                data['exerciseID'] = exercisesDataBox.get('exercises')[i]['_id'];
-                data['bodyRegionID'] = exercisesDataBox.get('exercises')[i]['regionID'];
-                data['showInUI'] = !exercisesDataBox.get('exercises')[i]['showInUI'];
-                BlurryDialog alert = BlurryDialog(
-                  title: "Edit an exercise",
-                  content: ExerciseForm(
-                    hint: "Bench press",
-                    exersiseNameController: _exersiseNameController,
-                    data: data
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: {'action': 'show', 'value': exercisesDataBox.get('exercises')[i]},
+                  child: Row(
+                    children: <Widget>[
+                      Text(exercisesDataBox.get('exercises')[i]['showInUI'] == true ? 'Hide' : 'Show'),
+                      Spacer(),
+                      exercisesDataBox.get('exercises')[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                    ],
                   ),
-                  callbackConfirm: callbackConfirm,
-                  callbackCancel: callbackCancel
-                );
-
-                return showGeneralDialog(
-                  barrierDismissible: true,
-                  barrierLabel: '',
-                  barrierColor: Colors.black38,
-                  transitionDuration: Duration(milliseconds: 100),
-                  pageBuilder: (ctx, anim1, anim2) => alert,
-                  transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
-                          child: FadeTransition(
-                              child: child,
-                              opacity: anim1,
-                          ),
-                      ),
-                  context: context,
-                );
-              },
-            )
+                ),
+                PopupMenuItem(
+                  value: {'action': 'edit', 'value': exercisesDataBox.get('exercises')[i]},
+                  child: Row(
+                    children: <Widget>[
+                      Text('Edit'),
+                      Spacer(),
+                      Icon(Icons.edit),
+                    ],
+                  ),
+                ),
+                PopupMenuDivider(
+                  height: 20,
+                ),
+                PopupMenuItem(
+                  value: {'action': 'delete', 'value': exercisesDataBox.get('exercises')[i]},
+                  child: Row(
+                    children: <Widget>[
+                      Text('Delete'),
+                      Spacer(),
+                      Icon(Icons.delete_forever),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ));
@@ -173,44 +225,20 @@ class _ExercisesState extends State<Exercises> {
                   ListView(
                     shrinkWrap: true,
                     children: _getListOfExercises(),
-                    // children: exercisesDataBox.get('exercises')
-                    //   // We need here `.map<Widget>((exercise)` instead of `.map((exercise)` because we have not primitive type inside list in a children prop above
-                    //   .map<Widget>((exercise) => ListTile(
-                    //     title: Text(exercise['name']),
-                    //     trailing: Row(
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         GestureDetector(
-                    //           child: exercise['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-                    //           onTap: () {
-                    //             VoidCallback callbackConfirm = () {
-                    //               Navigator.of(context).pop();
-                    //               data['exerciseName'] = exercise['name'];
-                    //               data['exerciseID'] = exercise['_id'];
-                    //               data['bodyRegionID'] = exercise['regionID'];
-                    //               data['showInUI'] = !exercise['showInUI'];
-                    //               createUpdateExercise();
-                    //             };
-                    //             BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, exercise);
-                    //             callShowGeneralDialog(context, _alert);
-                    //           },
-                    //         ),
-                    //         SizedBox(width: 25),
-                    //         Icon(Icons.edit),
-                    //       ],
-                    //     ),
-                    //   ))
-                    //   .toList(),
                   ),
                   SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('See all exercises'),
-                      Checkbox(
-                        checkColor: Colors.black54,
-                        value: _showAllExercises,
-                        onChanged: _changeShowAllExercises,
+                      Transform.scale(
+                        scale: 0.8,
+                        child: CupertinoSwitch(
+                          trackColor: Colors.black12,
+                          activeColor: Colors.black54,
+                          value: _showAllExercises,
+                          onChanged: _changeShowAllExercises,
+                        )
                       )
                     ],
                   )
@@ -241,7 +269,7 @@ class _ExercisesState extends State<Exercises> {
                         VoidCallback callbackConfirm = () {
                           Navigator.of(context).pop();
                           // print(_exersiseNameController.text),
-                          createUpdateExercise();
+                          createUpdateDeleteExercise();
                           _exersiseNameController.clear();
                         };
 
