@@ -34,7 +34,7 @@ class ExercisesRequests {
       'showInUI' : showInUI,
       'delete': delete
     });
-    String url = 'http://localhost:3000/exercise/create-update-delete-exercise';
+    String url = LogicSettings.urlAddressToSendRequests + '/exercise/create-update-delete-exercise';
     Map<String, String> headers = {"Content-type": "application/json"};
     Response response = await post(url, headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);

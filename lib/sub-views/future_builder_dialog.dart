@@ -17,7 +17,7 @@ class FutureBuilderDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, int>>(
-      future: this.calendarRequests.fetchData(),
+      future: this.calendarRequests.fetchDataMock(),
       builder: (BuildContext context, AsyncSnapshot<Map<String, int>> snapshot) {
         Widget _dialogContent;
         if (snapshot.hasData) {

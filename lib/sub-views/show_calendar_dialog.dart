@@ -22,6 +22,8 @@ class ShowCalendarDialog {
   };
 
   void show(BuildContext context) {
+    print(this.calendarRequests.date);
+
       VoidCallback callbackConfirm = () => {
         Navigator.of(context).pop(),
         print('_exersiseNameController.text'),

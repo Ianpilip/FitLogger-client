@@ -15,6 +15,7 @@ import 'package:FitLogger/sub-views/prompt_invisible_exercise.dart';
 import 'package:FitLogger/sub-views/prompt_dialog.dart';
 import 'package:FitLogger/prompt-text-nodes/exercises.dart';
 import 'package:FitLogger/sub-views/show_general_dialog.dart';
+import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 
 class Exercises extends StatefulWidget {
   @override
@@ -235,7 +236,7 @@ class _ExercisesState extends State<Exercises> {
                         scale: 0.8,
                         child: CupertinoSwitch(
                           trackColor: Colors.black12,
-                          activeColor: Colors.black54,
+                          activeColor: Color(ColorConstants.GREEN),
                           value: _showAllExercises,
                           onChanged: _changeShowAllExercises,
                         )

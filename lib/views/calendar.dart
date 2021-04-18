@@ -13,6 +13,9 @@ import 'package:FitLogger/sub-views/show_calendar_dialog.dart';
 import 'package:FitLogger/requests/calendar.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 
+import 'package:FitLogger/constants/build_form_type_enum.dart';
+import 'package:FitLogger/widgets/build_form.dart';
+
 class CalendarPage extends StatefulWidget {
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -120,19 +123,40 @@ class _CalendarPageState extends State<CalendarPage> {
     // print([_showAlert, _previewDayData]);
     if(_showAlert) {
 
+
+
+      //////////////////////////////////////////////////////////////////////////////////////////
+
+      /* USE FOR A WHILE MORE SIMPLE APPROACH AS OTHERS FORMS IN THIS APP */
+      // @TODO: CREATE MORE APPROPRIATE WAY TO SET ALL THE STUFF BELOW (callbacks, showDialog functions etc.)
       // Use Dependency Injection
-      CalendarRequests calendarRequests = CalendarRequests(date: {
+      // CalendarRequests calendarRequests = CalendarRequests(date: {
+      //   'year': _previewDayData['year'],
+      //   'month': _previewDayData['month'],
+      //   'dayOfMonth': _previewDayData['dayOfMonth']
+      // });
+      // ShowCalendarDialog(calendarRequests: calendarRequests).show(context);
+      // */
+      
+      Map<String, dynamic> data = {
         'year': _previewDayData['year'],
         'month': _previewDayData['month'],
-        'dayOfMonth': _previewDayData['dayOfMonth']
-      });
-      ShowCalendarDialog(calendarRequests: calendarRequests).show(context);
+        'day': _previewDayData['dayOfMonth'],
+        'callbackFunction': () {
+          setState(() {
+            _showAlert = false;
+          });
+        }
+      };
 
-      setState(() {
-        _showAlert = false;
-      });
+      BuildForm(formType: BuildFormTypeEnum.Workout, data: data).build(context);
+
     }
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////////
+
+
 
   @override
   Widget build(BuildContext context) {

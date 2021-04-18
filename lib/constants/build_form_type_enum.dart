@@ -1,0 +1,4 @@
+enum BuildFormTypeEnum{
+  Workout,
+  Exercise
+}

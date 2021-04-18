@@ -27,6 +27,8 @@ class _WorkoutFormState extends State<WorkoutForm> {
   @override
   Widget build(BuildContext context) {
 
+    print(['WorkoutForm', widget.data]);
+
     Widget _textareaComment(TextEditingController controller) {
       return Container(
         padding: EdgeInsets.only(left: 20, right: 20),

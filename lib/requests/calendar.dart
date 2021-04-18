@@ -10,7 +10,11 @@ class CalendarRequests {
 
   CalendarRequests({this.date});
 
-  Future<Map<String, int>> fetchData() async{
+  Future<Map<String, int>> fetchDataMock() async{
+    return this.date;
+  }
+
+  // Future<Map<String, int>> fetchData() async{
 
     // Working get all regions
     // Response response = await get('http://localhost:3000/region/get-all');
@@ -80,7 +84,17 @@ class CalendarRequests {
     // print(jsonDecoded);
 
     // return Future.delayed(Duration(milliseconds: 600), () => this.date);
-    return this.date;
+  //   return this.date;
+  // }
+  
+
+  Future<Map<String, dynamic>> fetchData(int year, int month, int day) async{
+    String userID = userDataBox.get('userID');
+    String tokenID = userDataBox.get('tokenID');
+    String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-workout/$userID/$tokenID/$year/$month/$day';
+    Response response = await get(url);
+    Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
+    return jsonDecoded;
   }
 
   Future<Map<String, dynamic>> createUpdateDeleteWorkout(
@@ -102,7 +116,7 @@ class CalendarRequests {
       'comment': comment,
       'action': action
     });
-    String url = 'http://localhost:3000/calendar/new-training-day';
+    String url = LogicSettings.urlAddressToSendRequests + '/calendar/new-training-day';
     Map<String, String> headers = {"Content-type": "application/json"};
     Response response = await post(url, headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
