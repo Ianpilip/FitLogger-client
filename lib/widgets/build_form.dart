@@ -5,11 +5,12 @@ import 'package:FitLogger/widgets/build_workout_form.dart';
 
 class BuildForm {
   final BuildFormTypeEnum formType;
+  // final String formType;
   final Map<String, dynamic> data;
 
   BuildForm({this.formType, this.data});
 
-  build(BuildContext context) {
+  show(BuildContext context) {
     if(formType == BuildFormTypeEnum.Workout) {
       return BuildWorkoutForm(data: data).build(context);
     }

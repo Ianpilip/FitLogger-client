@@ -15,6 +15,7 @@ import 'package:FitLogger/constants/hive_boxes_names.dart';
 
 import 'package:FitLogger/constants/build_form_type_enum.dart';
 import 'package:FitLogger/widgets/build_form.dart';
+import 'package:FitLogger/widgets/build_workout_form.dart';
 
 class CalendarPage extends StatefulWidget {
   @override
@@ -149,7 +150,9 @@ class _CalendarPageState extends State<CalendarPage> {
         }
       };
 
-      BuildForm(formType: BuildFormTypeEnum.Workout, data: data).build(context);
+      // BuildForm(formType: BuildFormTypeEnum.Workout, data: data).show(context);
+      // BuildForm(formType: 'workout', data: data).show(context);
+      BuildWorkoutForm(data: data).build(context);
 
     }
   }

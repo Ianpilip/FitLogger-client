@@ -27,7 +27,7 @@ class BlurryDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double verticalInsetPadding = MediaQuery.of(context).viewInsets.bottom > 0.0 ? 4.5 : 3.5;
-    print(title);
+    // print(title);
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,
       textAlign: TextAlign.center,

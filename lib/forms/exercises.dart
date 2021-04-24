@@ -60,7 +60,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
   void _pickerHandler() {
     // print(bodyRegionController.selectedItem);
     widget.data['bodyRegionID'] = bodyRegions[bodyRegionController.selectedItem]['_id'];
-    print(bodyRegions[bodyRegionController.selectedItem]);
+    // print(bodyRegions[bodyRegionController.selectedItem]);
   }
 
 

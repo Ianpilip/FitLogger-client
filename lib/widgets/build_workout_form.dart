@@ -20,7 +20,7 @@ class BuildWorkoutForm {
   final String hint = 'Workout duration 1h 15m';
 
 build(BuildContext context) async{
-    print(data);
+    // print(data);
 
     void callbackConfirm () {
       Navigator.of(context).pop();
