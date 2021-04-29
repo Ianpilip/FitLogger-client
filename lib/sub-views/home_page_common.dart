@@ -17,12 +17,15 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
           GestureDetector(
             child: Icon(Icons.logout, size: 30.0, color: Colors.black87,),
             onTap: () {
-              Box<dynamic> userData = Hive.box(userDataBoxName);
-              userData.putAll({
-                'tokenID': null,
-                'lastUpdate': null,
-                'userID': null,
-              });
+              Hive.box(userDataBoxName).clear();
+              Hive.box(exercisesDataBoxName).clear();
+              Hive.box(calendarDataBoxName).clear();
+              // Box<dynamic> userData = Hive.box(userDataBoxName);
+              // userData.putAll({
+              //   'tokenID': null,
+              //   'lastUpdate': null,
+              //   'userID': null,
+              // });
             }
           )
         ],
