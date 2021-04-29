@@ -61,7 +61,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
         cupertinoPickerControllers['uomController$indexExercise'] = FixedExtentScrollController(initialItem: uomIndex);
 
           exercise['reps'].asMap().forEach((indexCurrentSet, currentSet) {
-            print('HERE');
+            // print('HERE');
             cupertinoPickerControllers['exercise$indexExercise'] = {
               'set$indexExercise': {
                 'repController': FixedExtentScrollController(initialItem: currentSet - 1),

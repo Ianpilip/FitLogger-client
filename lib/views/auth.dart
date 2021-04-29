@@ -158,8 +158,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
       if(response['validationErrors'].length == 0) {
         if(response['body']['userTokenID'] != null && response['body']['userID'] != null) {
-          _emailController.clear();
-          _passwordController.clear();
+          // _emailController.clear();
+          // _passwordController.clear();
 
           Box<dynamic> userData = Hive.box(userDataBoxName);
           // Not put it in await function, because there is no need in it
