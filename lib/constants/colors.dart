@@ -3,6 +3,7 @@
 const int RED = 4294948277;
 const int BLUE = 4290833407;
 const int GREEN = 4290904001;
+const int DARK_OLIVE_GREEN = 4283788079;
 const int YELLOW = 4294967201;
 const int BLACK = 4278190080;
 const int GREY = 4286611584;

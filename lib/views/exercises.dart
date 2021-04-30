@@ -86,126 +86,131 @@ class _ExercisesState extends State<Exercises> {
 
   List<Widget> _getListOfExercises() {
     List<ListTile> exercises = [];
-    for (int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
-      if(_showAllExercises == false && exercisesDataBox.get('exercises')[i]['showInUI'] == false) continue;
-      exercises.add(ListTile(
-        title: Text(exercisesDataBox.get('exercises')[i]['name']),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PopupMenuButton<Map<String, dynamic>>(
-              icon: Icon(Icons.more_vert),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onSelected: (menu) {
-                if(menu['action'] == 'edit') {
-                  VoidCallback callbackConfirm = () {
-                    Navigator.of(context).pop();
-                    createUpdateDeleteExercise();
-                    _exersiseNameController.clear();
-                  };
+    // @TODO: Investigate why here comes null in two cases (splash red screen):
+    // 1. When we login
+    // 2. When we logout
+    if(exercisesDataBox.get('exercises') != null) {
+      for (int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
+        if(_showAllExercises == false && exercisesDataBox.get('exercises')[i]['showInUI'] == false) continue;
+        exercises.add(ListTile(
+          title: Text(exercisesDataBox.get('exercises')[i]['name']),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PopupMenuButton<Map<String, dynamic>>(
+                icon: Icon(Icons.more_vert),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                onSelected: (menu) {
+                  if(menu['action'] == 'edit') {
+                    VoidCallback callbackConfirm = () {
+                      Navigator.of(context).pop();
+                      createUpdateDeleteExercise();
+                      _exersiseNameController.clear();
+                    };
 
-                  VoidCallback callbackCancel = () => {
-                    Navigator.of(context).pop(),
-                    _exersiseNameController.clear()
-                  };
+                    VoidCallback callbackCancel = () => {
+                      Navigator.of(context).pop(),
+                      _exersiseNameController.clear()
+                    };
 
-                  data['exerciseName'] = menu['value']['name'];
-                  data['exerciseID'] = menu['value']['_id'];
-                  data['bodyRegionID'] = menu['value']['regionID'];
-                  data['showInUI'] = menu['value']['showInUI'];
-                  BlurryDialog alert = BlurryDialog(
-                    title: "Edit an exercise",
-                    content: ExerciseForm(
-                      hint: "Bench press",
-                      exersiseNameController: _exersiseNameController,
-                      data: data
-                    ),
-                    callbackConfirm: callbackConfirm,
-                    callbackCancel: callbackCancel
-                  );
-
-                  return showGeneralDialog(
-                    barrierDismissible: true,
-                    barrierLabel: '',
-                    barrierColor: Colors.black38,
-                    transitionDuration: Duration(milliseconds: 100),
-                    pageBuilder: (ctx, anim1, anim2) => alert,
-                    transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
-                            child: FadeTransition(
-                                child: child,
-                                opacity: anim1,
-                            ),
-                        ),
-                    context: context,
-                  );
-                } else if(menu['action'] == 'show') {
-                  VoidCallback callbackConfirm = () {
-                    Navigator.of(context).pop();
                     data['exerciseName'] = menu['value']['name'];
                     data['exerciseID'] = menu['value']['_id'];
                     data['bodyRegionID'] = menu['value']['regionID'];
-                    data['showInUI'] = !menu['value']['showInUI'];
-                    createUpdateDeleteExercise();
-                  };
-                  RichText dataAlert = showHideExercise(menu['value']);
-                  BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
-                  // BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, menu['value']);
-                  callShowGeneralDialog(context, _alert);
-                } else if(menu['action'] == 'delete') {
-                  VoidCallback callbackConfirm = () {
-                    Navigator.of(context).pop();
-                    data['exerciseID'] = menu['value']['_id'];
-                    data['bodyRegionID'] = menu['value']['regionID'];
-                    data['delete'] = true;
-                    createUpdateDeleteExercise();
-                  };
-                  RichText dataAlert = deleteExercise(menu['value']);
-                  BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
-                  callShowGeneralDialog(context, _alert);
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: {'action': 'show', 'value': exercisesDataBox.get('exercises')[i]},
-                  child: Row(
-                    children: <Widget>[
-                      Text(exercisesDataBox.get('exercises')[i]['showInUI'] == true ? 'Hide' : 'Show'),
-                      Spacer(),
-                      exercisesDataBox.get('exercises')[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
-                    ],
+                    data['showInUI'] = menu['value']['showInUI'];
+                    BlurryDialog alert = BlurryDialog(
+                      title: "Edit an exercise",
+                      content: ExerciseForm(
+                        hint: "Bench press",
+                        exersiseNameController: _exersiseNameController,
+                        data: data
+                      ),
+                      callbackConfirm: callbackConfirm,
+                      callbackCancel: callbackCancel
+                    );
+
+                    return showGeneralDialog(
+                      barrierDismissible: true,
+                      barrierLabel: '',
+                      barrierColor: Colors.black38,
+                      transitionDuration: Duration(milliseconds: 100),
+                      pageBuilder: (ctx, anim1, anim2) => alert,
+                      transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+                              child: FadeTransition(
+                                  child: child,
+                                  opacity: anim1,
+                              ),
+                          ),
+                      context: context,
+                    );
+                  } else if(menu['action'] == 'show') {
+                    VoidCallback callbackConfirm = () {
+                      Navigator.of(context).pop();
+                      data['exerciseName'] = menu['value']['name'];
+                      data['exerciseID'] = menu['value']['_id'];
+                      data['bodyRegionID'] = menu['value']['regionID'];
+                      data['showInUI'] = !menu['value']['showInUI'];
+                      createUpdateDeleteExercise();
+                    };
+                    RichText dataAlert = showHideExercise(menu['value']);
+                    BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
+                    // BlurryDialog _alert = setInvisibleExerciseDialog(context, callbackConfirm, menu['value']);
+                    callShowGeneralDialog(context, _alert);
+                  } else if(menu['action'] == 'delete') {
+                    VoidCallback callbackConfirm = () {
+                      Navigator.of(context).pop();
+                      data['exerciseID'] = menu['value']['_id'];
+                      data['bodyRegionID'] = menu['value']['regionID'];
+                      data['delete'] = true;
+                      createUpdateDeleteExercise();
+                    };
+                    RichText dataAlert = deleteExercise(menu['value']);
+                    BlurryDialog _alert = promptDialog(context, callbackConfirm, dataAlert);
+                    callShowGeneralDialog(context, _alert);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: {'action': 'show', 'value': exercisesDataBox.get('exercises')[i]},
+                    child: Row(
+                      children: <Widget>[
+                        Text(exercisesDataBox.get('exercises')[i]['showInUI'] == true ? 'Hide' : 'Show'),
+                        Spacer(),
+                        exercisesDataBox.get('exercises')[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                      ],
+                    ),
                   ),
-                ),
-                PopupMenuItem(
-                  value: {'action': 'edit', 'value': exercisesDataBox.get('exercises')[i]},
-                  child: Row(
-                    children: <Widget>[
-                      Text('Edit'),
-                      Spacer(),
-                      Icon(Icons.edit),
-                    ],
+                  PopupMenuItem(
+                    value: {'action': 'edit', 'value': exercisesDataBox.get('exercises')[i]},
+                    child: Row(
+                      children: <Widget>[
+                        Text('Edit'),
+                        Spacer(),
+                        Icon(Icons.edit),
+                      ],
+                    ),
                   ),
-                ),
-                PopupMenuDivider(
-                  height: 20,
-                ),
-                PopupMenuItem(
-                  value: {'action': 'delete', 'value': exercisesDataBox.get('exercises')[i]},
-                  child: Row(
-                    children: <Widget>[
-                      Text('Delete'),
-                      Spacer(),
-                      Icon(Icons.delete_forever),
-                    ],
+                  PopupMenuDivider(
+                    height: 20,
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ));
+                  PopupMenuItem(
+                    value: {'action': 'delete', 'value': exercisesDataBox.get('exercises')[i]},
+                    child: Row(
+                      children: <Widget>[
+                        Text('Delete'),
+                        Spacer(),
+                        Icon(Icons.delete_forever),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+      }
     }
 
     return exercises;
@@ -223,26 +228,26 @@ class _ExercisesState extends State<Exercises> {
               Column(
                 children: <Widget>[
                   SizedBox(height: 25),
-                  ListView(
-                    shrinkWrap: true,
-                    children: _getListOfExercises(),
-                  ),
-                  SizedBox(height: 25),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text('See all exercises'),
                       Transform.scale(
                         scale: 0.8,
                         child: CupertinoSwitch(
                           trackColor: Colors.black12,
-                          activeColor: Color(ColorConstants.GREEN),
+                          activeColor: Color(ColorConstants.DARK_OLIVE_GREEN),
                           value: _showAllExercises,
                           onChanged: _changeShowAllExercises,
                         )
                       )
                     ],
-                  )
+                  ),
+                  SizedBox(height: 15),
+                  ListView(
+                    shrinkWrap: true,
+                    children: _getListOfExercises(),
+                  ),
                 ]
               ),
               Positioned(

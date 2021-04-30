@@ -180,7 +180,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         content: CupertinoActivityIndicator(radius: 50,),
         backgroundColor: Colors.transparent,
       );
-      callShowGeneralAlert(context, dialog, false);
+      callShowDialogAuth(context, dialog, false);
       //
       
       Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);

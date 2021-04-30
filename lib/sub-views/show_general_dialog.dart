@@ -20,7 +20,7 @@ Future callShowGeneralDialog(BuildContext context, BlurryDialog alert, [bool bar
   );
 }
 
-Future callShowGeneralAlert(BuildContext context, AlertDialog alert, [bool barrierDismissible = true]) {
+Future callShowDialogAuth(BuildContext context, AlertDialog alert, [bool barrierDismissible = true]) {
   return showGeneralDialog(
     barrierDismissible: barrierDismissible,
     barrierLabel: '',
