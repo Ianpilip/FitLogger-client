@@ -17,7 +17,8 @@ class BlurryDialog extends StatelessWidget {
     this.callbackConfirm,
     this.callbackCancel,
     this.options = const {
-      LogicSettings.dialogCancelButton : true
+      LogicSettings.dialogShowCancelButton : LogicSettings.dialogShowCancelButtonByDefault,
+      LogicSettings.dialogSaveButtonName : LogicSettings.dialogSaveButtonNameByDefault
     }
   });
   final TextStyle textStyle = TextStyle(color: Colors.black);
@@ -64,12 +65,12 @@ class BlurryDialog extends StatelessWidget {
                       shape: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Text("Save", style: TextStyle(color: Colors.black87, fontSize: 18)),
+                      child: Text(options[LogicSettings.dialogSaveButtonName], style: TextStyle(color: Colors.black87, fontSize: 18)),
                       onPressed: () {
                         callbackConfirm();
                       },
                     ),
-                    options[LogicSettings.dialogCancelButton] == true ? OutlineButton(
+                    options[LogicSettings.dialogShowCancelButton] == true ? OutlineButton(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       highlightedBorderColor: Colors.black54,

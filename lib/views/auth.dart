@@ -7,6 +7,9 @@ import 'package:FitLogger/requests/auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:FitLogger/constants/hive_boxes_names.dart';
+import 'package:FitLogger/sub-views/show_general_dialog.dart';
+import 'package:FitLogger/sub-views/dialog.dart';
+import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 
 class AuthorizationPage extends StatefulWidget {
   @override
@@ -149,7 +152,40 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       _password = _passwordController.text;
 
       AuthRequests authRequests = AuthRequests();
+
+      // SHOW PROCESSING WHILE AUTH
+      // BlurryDialog alert = BlurryDialog(
+      //   title: '',
+      //   content: SizedBox(
+      //     // child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),),
+      //     // child: ColorFiltered(
+      //     //   colorFilter: ColorFilter.mode(Colors.red, BlendMode.modulate),
+      //     //   child: CupertinoActivityIndicator(radius: 50,),
+      //     // ),
+      //     child: CupertinoActivityIndicator(radius: 50,),
+      //     width: 60,
+      //     height: 60,
+      //   ),
+      //   callbackConfirm: () {},
+      //   callbackCancel: () {},
+      //   options: {
+      //     LogicSettings.dialogShowCancelButton: false,
+      //     LogicSettings.dialogSaveButtonName : LogicSettings.textOK
+      //   }
+      // );
+      // callShowGeneralDialog(context, alert, false);
+
+      AlertDialog dialog = AlertDialog(
+        elevation: 0,
+        content: CupertinoActivityIndicator(radius: 50,),
+        backgroundColor: Colors.transparent,
+      );
+      callShowGeneralAlert(context, dialog, false);
+      //
+      
       Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);
+      
+      Navigator.pop(context); // HIDE PROCESSING AFTER AUTH
 
       setState(() {
         _emailValidationError = response['validationErrors']['email'];

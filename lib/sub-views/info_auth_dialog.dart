@@ -34,12 +34,16 @@ BlurryDialog getInfoAuthDialog(BuildContext context) {
           TextSpan(text: 'Restore password', style: TextStyle(decoration: TextDecoration.underline)),
           TextSpan(text: ' under submit button. '),
           TextSpan(text: 'Then you will have 10 minutes to follow instructions we sent you on your email.'),
+          TextSpan(text: '\n\n'),
         ],
       ),
     ),
     callbackConfirm: callbackConfirm,
     callbackCancel: callbackCancel,
-    options: {LogicSettings.dialogCancelButton: false}
+    options: {
+      LogicSettings.dialogShowCancelButton: false,
+      LogicSettings.dialogSaveButtonName : LogicSettings.textOK
+    }
   );
   return alert;
 }

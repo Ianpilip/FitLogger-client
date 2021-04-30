@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:FitLogger/views/home.dart';
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        cupertinoOverrideTheme: CupertinoThemeData(brightness: Brightness.light, primaryColor: Colors.blue, barBackgroundColor: Colors.orange, primaryContrastingColor: Colors.red, scaffoldBackgroundColor: Colors. green),
         primarySwatch: customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200],
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
