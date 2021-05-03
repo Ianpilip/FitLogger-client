@@ -15,6 +15,8 @@ import 'package:FitLogger/sub-views/prompt_invisible_exercise.dart';
 import 'package:FitLogger/sub-views/prompt_dialog.dart';
 import 'package:FitLogger/prompt-text-nodes/exercises.dart';
 import 'package:FitLogger/sub-views/show_general_dialog.dart';
+import 'package:FitLogger/constants/logic_settings.dart' as LogicConstants;
+import 'package:FitLogger/constants/ui_settings.dart' as UIConstants;
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 
 class Exercises extends StatefulWidget {
@@ -216,6 +218,61 @@ class _ExercisesState extends State<Exercises> {
     return exercises;
   }
 
+  Container _getBodyRegionsAsTabs() {
+
+    List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
+    if(bodyRegionsData[0]['_id'] != LogicConstants.allItems) bodyRegionsData.insert(0, {'_id': LogicConstants.allItems, 'name': UIConstants.allItems});
+
+    double horizontalMargin = 10.0;
+    List<Widget> bodyRegions = [];
+    for (int i = 0; i < bodyRegionsData.length; i++) {
+      bodyRegions.add(
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
+          width: (MediaQuery.of(context).size.width - horizontalMargin * 5) / 2.5, // show third body region on the half so user can see that they are scrollable
+          child: ElevatedButton(
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+              shadowColor: MaterialStateProperty.all<Color>(Colors.transparent), // remove any shadow
+              overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+              side: MaterialStateProperty.all<BorderSide>(BorderSide(width: 1.0, color: Colors.grey[400],)),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)
+                )
+              )
+            ),
+
+            // style: ElevatedButton.styleFrom(
+            //   side: BorderSide(width: 1.0, color: Colors.red,),
+            //   shape: new RoundedRectangleBorder(
+            //     borderRadius: new BorderRadius.circular(30.0),
+            //   ),
+            // ),
+
+            child: Text(
+              bodyRegionsData[i]['name'],
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, fontSize: 20)
+            ),
+            onPressed: () {
+              print(bodyRegionsData[i]['_id']);
+            }
+          )
+        )
+      );
+    }
+
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 20.0),
+        height: 40.0,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: bodyRegions,
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -227,6 +284,10 @@ class _ExercisesState extends State<Exercises> {
             children: <Widget>[
               Column(
                 children: <Widget>[
+                  SizedBox(height: 25),
+
+                  _getBodyRegionsAsTabs(),
+
                   SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
