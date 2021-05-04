@@ -15,6 +15,7 @@ import 'package:FitLogger/sub-views/prompt_invisible_exercise.dart';
 import 'package:FitLogger/sub-views/prompt_dialog.dart';
 import 'package:FitLogger/prompt-text-nodes/exercises.dart';
 import 'package:FitLogger/sub-views/show_general_dialog.dart';
+import 'package:FitLogger/helpers/custom_material_color.dart';
 import 'package:FitLogger/constants/logic_settings.dart' as LogicConstants;
 import 'package:FitLogger/constants/ui_settings.dart' as UIConstants;
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
@@ -32,6 +33,7 @@ class _ExercisesState extends State<Exercises> {
   Box<dynamic> userDataBox = Hive.box(userDataBoxName);
   Box<dynamic> exercisesDataBox = Hive.box(exercisesDataBoxName);
   bool _showAllExercises = false;
+  String _currentTabBodyRegion = LogicConstants.allItems;
 
   Map<String, dynamic> data = {
     'exerciseName': '',
@@ -42,7 +44,7 @@ class _ExercisesState extends State<Exercises> {
   };
 
   void _changeShowAllExercises(bool value) {
-    print(value);
+    // print(value);
     setState(() {
       _showAllExercises = value;
     });
@@ -92,10 +94,18 @@ class _ExercisesState extends State<Exercises> {
     // 1. When we login
     // 2. When we logout
     if(exercisesDataBox.get('exercises') != null) {
-      for (int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
-        if(_showAllExercises == false && exercisesDataBox.get('exercises')[i]['showInUI'] == false) continue;
+      List<dynamic> exercisesData = [];
+      if(_currentTabBodyRegion == LogicConstants.allItems) {
+        exercisesData = exercisesDataBox.get('exercises');
+      } else {
+        for(int e = 0; e < exercisesDataBox.get('exercises').length; e++) {
+          if(exercisesDataBox.get('exercises')[e]['regionID'] == _currentTabBodyRegion) exercisesData.add(exercisesDataBox.get('exercises')[e]);
+        }
+      }
+      for (int i = 0; i < exercisesData.length; i++) {
+        if(_showAllExercises == false && exercisesData[i]['showInUI'] == false) continue;
         exercises.add(ListTile(
-          title: Text(exercisesDataBox.get('exercises')[i]['name']),
+          title: Text(exercisesData[i]['name']),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -175,17 +185,17 @@ class _ExercisesState extends State<Exercises> {
                 },
                 itemBuilder: (context) => [
                   PopupMenuItem(
-                    value: {'action': 'show', 'value': exercisesDataBox.get('exercises')[i]},
+                    value: {'action': 'show', 'value': exercisesData[i]},
                     child: Row(
                       children: <Widget>[
-                        Text(exercisesDataBox.get('exercises')[i]['showInUI'] == true ? 'Hide' : 'Show'),
+                        Text(exercisesData[i]['showInUI'] == true ? 'Hide' : 'Show'),
                         Spacer(),
-                        exercisesDataBox.get('exercises')[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                        exercisesData[i]['showInUI'] == true ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
                       ],
                     ),
                   ),
                   PopupMenuItem(
-                    value: {'action': 'edit', 'value': exercisesDataBox.get('exercises')[i]},
+                    value: {'action': 'edit', 'value': exercisesData[i]},
                     child: Row(
                       children: <Widget>[
                         Text('Edit'),
@@ -198,7 +208,7 @@ class _ExercisesState extends State<Exercises> {
                     height: 20,
                   ),
                   PopupMenuItem(
-                    value: {'action': 'delete', 'value': exercisesDataBox.get('exercises')[i]},
+                    value: {'action': 'delete', 'value': exercisesData[i]},
                     child: Row(
                       children: <Widget>[
                         Text('Delete'),
@@ -223,6 +233,8 @@ class _ExercisesState extends State<Exercises> {
     List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
     if(bodyRegionsData[0]['_id'] != LogicConstants.allItems) bodyRegionsData.insert(0, {'_id': LogicConstants.allItems, 'name': UIConstants.allItems});
 
+// print(_currentTabBodyRegion);
+
     double horizontalMargin = 10.0;
     List<Widget> bodyRegions = [];
     for (int i = 0; i < bodyRegionsData.length; i++) {
@@ -235,8 +247,8 @@ class _ExercisesState extends State<Exercises> {
               foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
               shadowColor: MaterialStateProperty.all<Color>(Colors.transparent), // remove any shadow
               overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-              side: MaterialStateProperty.all<BorderSide>(BorderSide(width: 1.0, color: Colors.grey[400],)),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              side: MaterialStateProperty.all<BorderSide>(BorderSide(width: 1.0, color: bodyRegionsData[i]['_id'] == _currentTabBodyRegion ? customMaterialColor(Color(ColorConstants.BLUE))[100] : Colors.grey[400],)),
+              backgroundColor: MaterialStateProperty.all<Color>(bodyRegionsData[i]['_id'] == _currentTabBodyRegion ? customMaterialColor(Color(ColorConstants.BLUE))[100] : Colors.white),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0)
@@ -256,7 +268,11 @@ class _ExercisesState extends State<Exercises> {
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, fontSize: 20)
             ),
             onPressed: () {
-              print(bodyRegionsData[i]['_id']);
+              setState(() {
+                _currentTabBodyRegion = bodyRegionsData[i]['_id'];
+              });
+              
+              // print(bodyRegionsData[i]['_id']);
             }
           )
         )
