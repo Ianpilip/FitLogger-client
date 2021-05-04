@@ -148,6 +148,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
     // Form handler
     _authUser() async {
+      FocusScope.of(context).unfocus(); // Hide the keyboard
       _email = _emailController.text;
       _password = _passwordController.text;
 
@@ -229,7 +230,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         }
       }
 
-      FocusScope.of(context).unfocus();
+      
     }
 
     return Container(

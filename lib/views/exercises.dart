@@ -232,7 +232,7 @@ class _ExercisesState extends State<Exercises> {
 
     List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
     if(bodyRegionsData[0]['_id'] != LogicConstants.allItems) bodyRegionsData.insert(0, {'_id': LogicConstants.allItems, 'name': UIConstants.allItems});
-    double horizontalMargin = 10.0;
+    double horizontalMargin = 5.0;
     List<Widget> bodyRegions = [];
     for (int i = 0; i < bodyRegionsData.length; i++) {
       bodyRegions.add(
