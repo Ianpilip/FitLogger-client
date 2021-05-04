@@ -185,7 +185,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       
       Map<String, dynamic> response = await authRequests.auth(_email, _password, _restorePassword);
       
-      Navigator.pop(context); // HIDE PROCESSING AFTER AUTH
+      // Navigator.pop(context); // HIDE PROCESSING AFTER AUTH
 
       setState(() {
         _emailValidationError = response['validationErrors']['email'];
@@ -206,6 +206,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
               'lastUpdate': user['body']['lastUpdate'],
               'userID': user['body']['userID'],
             });
+            Navigator.pop(context); // HIDE PROCESSING AFTER AUTH
             // print(['Update Hive with userTokenID!', user]);
           });
         }

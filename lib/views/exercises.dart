@@ -232,16 +232,14 @@ class _ExercisesState extends State<Exercises> {
 
     List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
     if(bodyRegionsData[0]['_id'] != LogicConstants.allItems) bodyRegionsData.insert(0, {'_id': LogicConstants.allItems, 'name': UIConstants.allItems});
-
-// print(_currentTabBodyRegion);
-
     double horizontalMargin = 10.0;
     List<Widget> bodyRegions = [];
     for (int i = 0; i < bodyRegionsData.length; i++) {
       bodyRegions.add(
         Container(
           margin: EdgeInsets.symmetric(horizontal: horizontalMargin),
-          width: (MediaQuery.of(context).size.width - horizontalMargin * 5) / 2.5, // show third body region on the half so user can see that they are scrollable
+          // width: (MediaQuery.of(context).size.width - horizontalMargin * 5) / 2.5, // show third body region on the half so user can see that they are scrollable
+          width: (MediaQuery.of(context).size.width - horizontalMargin * 7) / 3.5, // show forth body region on the half so user can see that they are scrollable
           child: ElevatedButton(
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
@@ -265,7 +263,7 @@ class _ExercisesState extends State<Exercises> {
 
             child: Text(
               bodyRegionsData[i]['name'],
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, fontSize: 20)
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54, fontSize: 16)
             ),
             onPressed: () {
               setState(() {
@@ -300,11 +298,7 @@ class _ExercisesState extends State<Exercises> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  SizedBox(height: 25),
-
                   _getBodyRegionsAsTabs(),
-
-                  SizedBox(height: 25),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
