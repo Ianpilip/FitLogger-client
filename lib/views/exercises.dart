@@ -230,7 +230,10 @@ class _ExercisesState extends State<Exercises> {
 
   Container _getBodyRegionsAsTabs() {
 
-    List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
+    // We need to copy a list like that - List<String> clone = []..addAll(originalList);
+    // Because if make just like that - List<dynamic> bodyRegionsData = exercisesDataBox.get('bodyRegions');
+    // each change will be done in exercisesDataBox.get('bodyRegions') also and we will have 'All' body region in the exercise form
+    List<dynamic> bodyRegionsData = []..addAll(exercisesDataBox.get('bodyRegions'));
     if(bodyRegionsData[0]['_id'] != LogicConstants.allItems) bodyRegionsData.insert(0, {'_id': LogicConstants.allItems, 'name': UIConstants.allItems});
     double horizontalMargin = 5.0;
     List<Widget> bodyRegions = [];
@@ -289,6 +292,10 @@ class _ExercisesState extends State<Exercises> {
 
   @override
   Widget build(BuildContext context) {
+    // print(MediaQuery.of(context).size.height);
+    // print(AppBar().preferredSize.height);
+    // print(kToolbarHeight);
+    // print(Scaffold.of(context).appBarMaxHeight);
 
     return Container(
       child: ValueListenableBuilder(
@@ -300,93 +307,161 @@ class _ExercisesState extends State<Exercises> {
                 children: <Widget>[
                   _getBodyRegionsAsTabs(),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('See all exercises'),
-                      Transform.scale(
-                        scale: 0.8,
-                        child: CupertinoSwitch(
-                          trackColor: Colors.black12,
-                          activeColor: Color(ColorConstants.DARK_OLIVE_GREEN),
-                          value: _showAllExercises,
-                          onChanged: _changeShowAllExercises,
+                      Container(
+                        // margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          children: [
+                            Text('See all exercises'),
+                            Transform.scale(
+                              scale: 0.8,
+                              child: CupertinoSwitch(
+                                trackColor: Colors.black12,
+                                activeColor: Color(ColorConstants.DARK_OLIVE_GREEN),
+                                value: _showAllExercises,
+                                onChanged: _changeShowAllExercises,
+                              )
+                            ),
+                          ],
                         )
+                      ),
+                      RaisedButton(
+                        // shape: CircleBorder(),
+                        shape: CircleBorder(side: BorderSide(color: Colors.black87)),
+                        color: Colors.white,
+                        child: Icon(Icons.add, color: Colors.black87, size: 40),
+                        onPressed: () {
+                          
+                          data = {
+                            'exerciseName': '',
+                            'exerciseID': '',
+                            'bodyRegionID': '',
+                            'showInUI': true,
+                          };
+
+                          // Navigator.of(context).pop() removes alert dialog
+                          VoidCallback callbackConfirm = () {
+                            Navigator.of(context).pop();
+                            // print(_exersiseNameController.text),
+                            createUpdateDeleteExercise();
+                            _exersiseNameController.clear();
+                          };
+
+                          VoidCallback callbackCancel = () => {
+                            Navigator.of(context).pop(),
+                            // print(_exersiseNameController.text),
+                            _exersiseNameController.clear()
+                          };
+
+                          BlurryDialog alert = BlurryDialog(
+                            title: "Add new exercises",
+                            content: ExerciseForm(
+                              hint: "Bench press",
+                              exersiseNameController: _exersiseNameController,
+                              data: data
+                            ),
+                            callbackConfirm: callbackConfirm,
+                            callbackCancel: callbackCancel
+                          );
+
+                          return showGeneralDialog(
+                            barrierDismissible: true,
+                            barrierLabel: '',
+                            barrierColor: Colors.black38,
+                            transitionDuration: Duration(milliseconds: 100),
+                            pageBuilder: (ctx, anim1, anim2) => alert,
+                            transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+                                    child: FadeTransition(
+                                        child: child,
+                                        opacity: anim1,
+                                    ),
+                                ),
+                            context: context,
+                          );
+                        },
                       )
                     ],
                   ),
                   SizedBox(height: 15),
-                  ListView(
-                    shrinkWrap: true,
-                    children: _getListOfExercises(),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(bottom: 30.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: _getListOfExercises(),
+                      )
+                    )
                   ),
                 ]
               ),
-              Positioned(
-                right: 0,
-                bottom: 30.0,
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    margin: EdgeInsets.all(15.0),
-                    child: RaisedButton(
-                      // shape: CircleBorder(),
-                      shape: CircleBorder(side: BorderSide(color: Colors.black87)),
-                      color: Colors.white,
-                      child: Icon(Icons.add, color: Colors.black87, size: 60),
-                      onPressed: () {
+              // Positioned(
+              //   right: 0,
+              //   bottom: 30.0,
+              //   child: Align(
+              //     alignment: Alignment.bottomRight,
+              //     child: Container(
+              //       margin: EdgeInsets.all(15.0),
+              //       child: RaisedButton(
+              //         // shape: CircleBorder(),
+              //         shape: CircleBorder(side: BorderSide(color: Colors.black87)),
+              //         color: Colors.white,
+              //         child: Icon(Icons.add, color: Colors.black87, size: 60),
+              //         onPressed: () {
                         
-                        data = {
-                          'exerciseName': '',
-                          'exerciseID': '',
-                          'bodyRegionID': '',
-                          'showInUI': true,
-                        };
+              //           data = {
+              //             'exerciseName': '',
+              //             'exerciseID': '',
+              //             'bodyRegionID': '',
+              //             'showInUI': true,
+              //           };
 
-                        // Navigator.of(context).pop() removes alert dialog
-                        VoidCallback callbackConfirm = () {
-                          Navigator.of(context).pop();
-                          // print(_exersiseNameController.text),
-                          createUpdateDeleteExercise();
-                          _exersiseNameController.clear();
-                        };
+              //           // Navigator.of(context).pop() removes alert dialog
+              //           VoidCallback callbackConfirm = () {
+              //             Navigator.of(context).pop();
+              //             // print(_exersiseNameController.text),
+              //             createUpdateDeleteExercise();
+              //             _exersiseNameController.clear();
+              //           };
 
-                        VoidCallback callbackCancel = () => {
-                          Navigator.of(context).pop(),
-                          // print(_exersiseNameController.text),
-                          _exersiseNameController.clear()
-                        };
+              //           VoidCallback callbackCancel = () => {
+              //             Navigator.of(context).pop(),
+              //             // print(_exersiseNameController.text),
+              //             _exersiseNameController.clear()
+              //           };
 
-                        BlurryDialog alert = BlurryDialog(
-                          title: "Add new exercises",
-                          content: ExerciseForm(
-                            hint: "Bench press",
-                            exersiseNameController: _exersiseNameController,
-                            data: data
-                          ),
-                          callbackConfirm: callbackConfirm,
-                          callbackCancel: callbackCancel
-                        );
+              //           BlurryDialog alert = BlurryDialog(
+              //             title: "Add new exercises",
+              //             content: ExerciseForm(
+              //               hint: "Bench press",
+              //               exersiseNameController: _exersiseNameController,
+              //               data: data
+              //             ),
+              //             callbackConfirm: callbackConfirm,
+              //             callbackCancel: callbackCancel
+              //           );
 
-                        return showGeneralDialog(
-                          barrierDismissible: true,
-                          barrierLabel: '',
-                          barrierColor: Colors.black38,
-                          transitionDuration: Duration(milliseconds: 100),
-                          pageBuilder: (ctx, anim1, anim2) => alert,
-                          transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
-                                  child: FadeTransition(
-                                      child: child,
-                                      opacity: anim1,
-                                  ),
-                              ),
-                          context: context,
-                        );
-                      },
-                    ),
-                  )
-                )
-              ),
+              //           return showGeneralDialog(
+              //             barrierDismissible: true,
+              //             barrierLabel: '',
+              //             barrierColor: Colors.black38,
+              //             transitionDuration: Duration(milliseconds: 100),
+              //             pageBuilder: (ctx, anim1, anim2) => alert,
+              //             transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+              //                 filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+              //                     child: FadeTransition(
+              //                         child: child,
+              //                         opacity: anim1,
+              //                     ),
+              //                 ),
+              //             context: context,
+              //           );
+              //         },
+              //       ),
+              //     )
+              //   )
+              // ),
             ],
           );
         }

@@ -6,5 +6,5 @@ const String dialogSaveButtonNameByDefault = 'Save';
 const String textOK = 'OK';
 const int lastRefreshToken = 2592000000;  // 30 days
 const String allItems = 'allItems';
-// const String urlAddressToSendRequests = 'http://localhost:3000';
-const String urlAddressToSendRequests = 'https://loggerfit.herokuapp.com';
+const String urlAddressToSendRequests = 'http://localhost:3000';
+// const String urlAddressToSendRequests = 'https://loggerfit.herokuapp.com';
