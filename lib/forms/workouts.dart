@@ -2,9 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
+import "package:collection/collection.dart";
 
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
+import 'package:FitLogger/constants/ui_settings.dart' as UIConstants;
 import 'package:FitLogger/helpers/index_walker.dart';
+import 'package:FitLogger/constants/hive_boxes_names.dart';
 
 class WorkoutForm extends StatefulWidget {
   final String hint;
@@ -29,6 +33,15 @@ class _WorkoutFormState extends State<WorkoutForm> {
   FixedExtentScrollController repController;
   FixedExtentScrollController uomController;
   Map<String, dynamic> cupertinoPickerControllers = {};
+
+  FixedExtentScrollController bodyRegionController;
+  FixedExtentScrollController exerciseController;
+  Box<dynamic> exercisesDataBox;
+  List<dynamic> bodyRegionsData;
+  List<Widget> bodyRegionItems = [];
+  String _currentBodyRegion = LogicSettings.allItems;
+  String _currentExercisesToShow = LogicSettings.allItems;
+  Map<dynamic, List<dynamic>> _groupedExercisesByRegionID;
 
   int justToCheck = 0;
 
@@ -100,6 +113,42 @@ class _WorkoutFormState extends State<WorkoutForm> {
     uomController = FixedExtentScrollController(initialItem: 0);
     // print(IndexWalker(widget.data)['workout']['uom'].value);
     // print(IndexWalker(widget.data)['workout']['exercise'][0]['uom'].value);
+    // 
+    // 
+    // 
+    
+    exercisesDataBox = Hive.box(exercisesDataBoxName);
+    bodyRegionsData = []..addAll(exercisesDataBox.get('bodyRegions'));
+    bodyRegionsData.insert(0, {'_id': LogicSettings.allItems, 'name': UIConstants.allItems});
+    bodyRegionController = FixedExtentScrollController(initialItem: 0);
+    bodyRegionsData.forEach((item) {
+      bodyRegionItems.add(
+        Center(child: Text(item['name']))
+      );
+    });
+
+
+    _groupedExercisesByRegionID = groupBy(exercisesDataBox.get('exercises'), (exercise) => exercise['regionID']);
+    // print(newMap['603ac277df746a381172f18e']);
+
+
+
+  //     List<dynamic> exercisesItems = [];
+  //     if(bodyRegionsData[bodyRegionController.selectedItem]['_id'] == LogicSettings.allItems) {
+  //       exercisesItems = exercisesDataBox.get('exercises');
+  //     } else {
+  //       for(int e = 0; e < exercisesDataBox.get('exercises').length; e++) {
+  //         if(exercisesDataBox.get('exercises')[e]['regionID'] == bodyRegionsData[bodyRegionController.selectedItem]['_id']) exercisesItems.add(exercisesDataBox.get('exercises')[e]);
+  //       }
+  //     }
+
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bodyRegionController.dispose();
   }
 
   void _pickerHandler() {
@@ -113,6 +162,20 @@ class _WorkoutFormState extends State<WorkoutForm> {
     // widget.data['bodyRegionID'] = bodyRegions[bodyRegionController.selectedItem]['_id'];
     // print(bodyRegions[bodyRegionController.selectedItem]);
   }
+
+
+  void _changeBodyRegionHandler() {
+    // print(bodyRegionsData[bodyRegionController.selectedItem]['_id']);
+    setState(() {
+      _currentBodyRegion = bodyRegionsData[bodyRegionController.selectedItem]['_id'];
+    });
+  }
+
+  void _changeExerciseHandler() {
+    // print(_currentBodyRegion == LogicSettings.allItems ? exercisesDataBox.get('exercises') : _groupedExercisesByRegionID[_currentBodyRegion]);
+    // print([_currentBodyRegion, exercisesData[bodyRegionController.selectedItem]['_id']]);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +252,28 @@ class _WorkoutFormState extends State<WorkoutForm> {
       );
     }
 
+
+
     Widget _exercises(TextEditingController controller) {
+
+      // print(_groupedExercisesByRegionID[_currentBodyRegion]);
+      // print(_groupedExercisesByRegionID[_currentBodyRegion]);
+
+      List<Widget> exercisesItems = [];
+      if(_currentBodyRegion == LogicSettings.allItems) {
+        for(int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
+          exercisesItems.add(Center(child: Text(exercisesDataBox.get('exercises')[i]['name'])));
+        }
+      } else {
+        if(_groupedExercisesByRegionID[_currentBodyRegion] != null) {
+          for(int i = 0; i < _groupedExercisesByRegionID[_currentBodyRegion].length; i++) {
+            exercisesItems.add(Center(child: Text(_groupedExercisesByRegionID[_currentBodyRegion][i]['name'])));
+          }
+        }
+      }
+
+
+
       if(IndexWalker(widget.data)['workout']['exercise'].value != null) {
         // print(widget.data['workout']['exercise']);
 
@@ -323,7 +407,49 @@ class _WorkoutFormState extends State<WorkoutForm> {
         );
 
       } else {
-        return Text('No exercises');
+        print(['****', exercisesItems, '****']);
+        // exercisesItems.length > 0 ? exercisesItems[0] : Text('No')
+
+        return Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                height: 90,
+                child: CupertinoPicker(
+                  backgroundColor: Colors.white,
+                  scrollController: bodyRegionController,
+                  onSelectedItemChanged: (int index) => _changeBodyRegionHandler(),
+                  // onSelectedItemChanged: (value) {
+                  //   setState(() {
+                  //     selectedValue = value;
+                  //   });
+                  // },
+                  itemExtent: 40,
+                  children: bodyRegionItems,
+                )
+              )
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                height: 90,
+                child: exercisesItems.length > 0 ? CupertinoPicker(
+                  backgroundColor: Colors.white,
+                  scrollController: exerciseController,
+                  onSelectedItemChanged: (int index) => _changeExerciseHandler(),
+                  // onSelectedItemChanged: (value) {
+                  //   setState(() {
+                  //     selectedValue = value;
+                  //   });
+                  // },
+                  itemExtent: 40,
+                  children: exercisesItems,
+                ) : Center(child: Text('There are no exercises'))
+              )
+            ),
+          ],
+        );
       }
 
       
