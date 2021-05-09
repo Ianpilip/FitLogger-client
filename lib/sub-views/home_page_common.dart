@@ -71,7 +71,7 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                         ],
                       )
                     ),
-                    Text('Calendar')
+                    Text('Workouts')
                   ]
                 )
               )
@@ -104,12 +104,12 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                       text: TextSpan(
                         children: [
                           WidgetSpan(
-                            child: Icon(Icons.history)
+                            child: Icon(Icons.show_chart)
                           ),
                         ],
                       )
                     ),
-                    Text('History')
+                    Text('Progress')
                   ]
                 )
               )

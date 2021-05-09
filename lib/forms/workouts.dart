@@ -1,3 +1,4 @@
+import 'package:FitLogger/helpers/custom_material_color.dart';
 /// FORM FOR CREATING/UPDATING/REMOVING WORKOUT DAY
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import "package:collection/collection.dart";
 
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
 import 'package:FitLogger/constants/ui_settings.dart' as UIConstants;
+import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 import 'package:FitLogger/helpers/index_walker.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 
@@ -260,14 +262,18 @@ class _WorkoutFormState extends State<WorkoutForm> {
       // print(_groupedExercisesByRegionID[_currentBodyRegion]);
 
       List<Widget> exercisesItems = [];
+      TextStyle textStyle;
       if(_currentBodyRegion == LogicSettings.allItems) {
         for(int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
-          exercisesItems.add(Center(child: Text(exercisesDataBox.get('exercises')[i]['name'])));
+          textStyle = TextStyle(fontSize: exercisesDataBox.get('exercises')[i]['name'].length > 55 ? 13 : 16);
+          exercisesItems.add(Center(child: Text(exercisesDataBox.get('exercises')[i]['name'], style: textStyle)));
         }
       } else {
         if(_groupedExercisesByRegionID[_currentBodyRegion] != null) {
           for(int i = 0; i < _groupedExercisesByRegionID[_currentBodyRegion].length; i++) {
-            exercisesItems.add(Center(child: Text(_groupedExercisesByRegionID[_currentBodyRegion][i]['name'])));
+            textStyle = TextStyle(fontSize: _groupedExercisesByRegionID[_currentBodyRegion][i]['name'].length > 55 ? 13 : 16);
+            print(_groupedExercisesByRegionID[_currentBodyRegion]);
+            exercisesItems.add(Center(child: Text(_groupedExercisesByRegionID[_currentBodyRegion][i]['name'], style: textStyle)));
           }
         }
       }
@@ -407,13 +413,102 @@ class _WorkoutFormState extends State<WorkoutForm> {
         );
 
       } else {
-        print(['****', exercisesItems, '****']);
+        // print(['****', exercisesItems, '****']);
         // exercisesItems.length > 0 ? exercisesItems[0] : Text('No')
+
+        Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200];
+
+        return Container(
+          // color: Colors.transparent,
+          child: Column(
+            children: [
+              Container(
+                height: 50.0,
+                width: 500.0,
+                child: Center(child: Text('Add new exercise')),
+                decoration: BoxDecoration(
+                  // color: Color(ColorConstants.GHOST_WHITE),
+                  color: _color,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+              ),
+              Container(
+                // color: Color(ColorConstants.GHOST_WHITE),
+                decoration: BoxDecoration(
+                  color: _color,
+                  border: Border(
+                    top: BorderSide(width: 1.0, color: Colors.grey),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: Container(
+                        height: 90,
+                        child: CupertinoPicker(
+                          backgroundColor: _color,
+                          scrollController: bodyRegionController,
+                          onSelectedItemChanged: (int index) => _changeBodyRegionHandler(),
+                          itemExtent: 45,
+                          children: bodyRegionItems,
+                        )
+                      )
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
+                    Expanded(
+                      flex: 20,
+                      child: Container(
+                        height: 90,
+                        child: exercisesItems.length > 0 ? CupertinoPicker(
+                          backgroundColor: _color,
+                          scrollController: exerciseController,
+                          onSelectedItemChanged: (int index) => _changeExerciseHandler(),
+                          itemExtent: 45,
+                          children: exercisesItems,
+                        ) : Center(child: Text('There are no exercises'))
+                      )
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        width: 40.0,
+                        height: 40.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(Icons.add, size: 30.0,),
+                            color: Colors.black87,
+                            onPressed: () {
+                              print('Add new exercise to workout day');
+                            },
+                          ),
+                        )
+                      ),
+                    ),
+                    Expanded(flex: 1, child: SizedBox()),
+                  ],
+                )
+              )
+            ],
+          )
+        );
 
         return Row(
           children: [
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Container(
                 height: 90,
                 child: CupertinoPicker(
@@ -425,13 +520,14 @@ class _WorkoutFormState extends State<WorkoutForm> {
                   //     selectedValue = value;
                   //   });
                   // },
-                  itemExtent: 40,
+                  itemExtent: 45,
                   children: bodyRegionItems,
                 )
               )
             ),
+            Expanded(flex: 1, child: SizedBox()),
             Expanded(
-              flex: 3,
+              flex: 10,
               child: Container(
                 height: 90,
                 child: exercisesItems.length > 0 ? CupertinoPicker(
@@ -443,11 +539,59 @@ class _WorkoutFormState extends State<WorkoutForm> {
                   //     selectedValue = value;
                   //   });
                   // },
-                  itemExtent: 40,
+                  itemExtent: 45,
                   children: exercisesItems,
                 ) : Center(child: Text('There are no exercises'))
               )
             ),
+            Expanded(flex: 1, child: SizedBox()),
+            // Expanded(
+            //   flex: 2,
+            //   child: FloatingActionButton(
+            //     onPressed: () => {},
+            //     // tooltip: 'Increment',
+            //     child: RichText(text: TextSpan(children: [WidgetSpan(child: Icon(Icons.add), style: TextStyle(fontSize: 24))])),
+            //   ),
+            // ),
+
+        //     Expanded(
+        //       flex: 2,
+        //       child:         CircleAvatar(
+        //   backgroundColor: Colors.white,
+        //   radius: 20,
+        //   child: IconButton(
+        //     padding: EdgeInsets.zero,
+        //     icon: Icon(Icons.add),
+        //     color: Colors.black87,
+        //     onPressed: () {},
+        //   ),
+        // ),
+        //     )
+
+
+            Expanded(
+              flex: 2,
+              child: Container(
+                width: 40.0,
+                height: 40.0,
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                  border: new Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  icon: Icon(Icons.add, size: 30.0,),
+                  color: Colors.black87,
+                  onPressed: () {
+                    print('Add new exercise to workout day');
+                  },
+                ),
+              ),
+            )
+
           ],
         );
       }
@@ -459,6 +603,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
       child: Column(
         children: <Widget>[
           _exercises(widget.workoutCommentController),
+          SizedBox(height: 20),
           _textareaComment(widget.workoutCommentController),
           SizedBox(height: 10),
           Text('Symbols remained: ${_symbolsRemains.toString()}')
