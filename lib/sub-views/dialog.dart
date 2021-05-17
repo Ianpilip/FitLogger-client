@@ -43,51 +43,95 @@ class BlurryDialog extends StatelessWidget {
           ),
           title: title != null ? Center(child: Text(title, style: textStyle)) : title,
           // insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
-          insetPadding: EdgeInsets.symmetric(horizontal: 10),
+          insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 100),
           content: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Center(child: content),
-                  width: MediaQuery.of(context).size.width,
-                  // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    OutlineButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      highlightedBorderColor: Colors.black54,
-                      borderSide: BorderSide(color: Colors.transparent),
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(options[LogicSettings.dialogSaveButtonName], style: TextStyle(color: Colors.black87, fontSize: 18)),
-                      onPressed: () {
-                        callbackConfirm();
-                      },
-                    ),
-                    options[LogicSettings.dialogShowCancelButton] == true ? OutlineButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      highlightedBorderColor: Colors.black54,
-                      borderSide: BorderSide(color: Colors.transparent),
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text("Cancel", style: TextStyle(color: Colors.black87, fontSize: 18)),
-                      onPressed: () {
-                        callbackCancel();
-                      },
-                    ) : SizedBox(),
-                  ],
-                )
-              ]
+            child: Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Center(child: content),
+              width: MediaQuery.of(context).size.width,
+              // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
             )
-          )
+          ),
+          // content: SingleChildScrollView(
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: <Widget>[
+          //       Container(
+          //         padding: EdgeInsets.only(top: 20),
+          //         child: Center(child: content),
+          //         width: MediaQuery.of(context).size.width,
+          //         // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+          //       ),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: <Widget>[
+          //           OutlineButton(
+          //             splashColor: Colors.transparent,
+          //             highlightColor: Colors.transparent,
+          //             highlightedBorderColor: Colors.black54,
+          //             borderSide: BorderSide(color: Colors.transparent),
+          //             shape: OutlineInputBorder(
+          //               borderRadius: BorderRadius.circular(30),
+          //             ),
+          //             child: Text(options[LogicSettings.dialogSaveButtonName], style: TextStyle(color: Colors.black87, fontSize: 18)),
+          //             onPressed: () {
+          //               callbackConfirm();
+          //             },
+          //           ),
+          //           options[LogicSettings.dialogShowCancelButton] == true ? OutlineButton(
+          //             splashColor: Colors.transparent,
+          //             highlightColor: Colors.transparent,
+          //             highlightedBorderColor: Colors.black54,
+          //             borderSide: BorderSide(color: Colors.transparent),
+          //             shape: OutlineInputBorder(
+          //               borderRadius: BorderRadius.circular(30),
+          //             ),
+          //             child: Text("Cancel", style: TextStyle(color: Colors.black87, fontSize: 18)),
+          //             onPressed: () {
+          //               callbackCancel();
+          //             },
+          //           ) : SizedBox(),
+          //         ],
+          //       )
+          //     ]
+          //   )
+          // ),
+          actions: <Widget>[
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  OutlineButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightedBorderColor: Colors.black54,
+                    borderSide: BorderSide(color: Colors.transparent),
+                    shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(options[LogicSettings.dialogSaveButtonName], style: TextStyle(color: Colors.black87, fontSize: 18)),
+                    onPressed: () {
+                      callbackConfirm();
+                    },
+                  ),
+                  options[LogicSettings.dialogShowCancelButton] == true ? OutlineButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    highlightedBorderColor: Colors.black54,
+                    borderSide: BorderSide(color: Colors.transparent),
+                    shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text("Cancel", style: TextStyle(color: Colors.black87, fontSize: 18)),
+                    onPressed: () {
+                      callbackCancel();
+                    },
+                  ) : SizedBox(),
+                ],
+              )
+            )
+          ],
         )
       )
     );
