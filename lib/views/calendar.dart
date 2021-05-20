@@ -145,6 +145,7 @@ class _CalendarPageState extends State<CalendarPage> {
         'day': _previewDayData['dayOfMonth'],
         'callbackFunction': () {
           setState(() {
+            print('Hey here');
             _showAlert = false;
           });
         }
@@ -153,6 +154,24 @@ class _CalendarPageState extends State<CalendarPage> {
       // BuildForm(formType: BuildFormTypeEnum.Workout, data: data).show(context);
       // BuildForm(formType: 'workout', data: data).show(context);
       BuildWorkoutForm(data: data).build(context);
+
+      // showGeneralDialog(
+      //   barrierDismissible: true,
+      //   barrierLabel: '',
+      //   barrierColor: Colors.black38,
+      //   transitionDuration: Duration(milliseconds: 100),
+      //   pageBuilder: (ctx, anim1, anim2) => BuildWorkoutForm(data: data),
+      //   transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+      //       filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+      //           child: FadeTransition(
+      //               child: child,
+      //               opacity: anim1,
+      //           ),
+      //       ),
+      //   context: context,
+      // );
+
+      // BuildWorkoutForm(data: data);
 
     }
   }

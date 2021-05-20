@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:FitLogger/widgets/add_exercise_inside_alertdialog.dart' as AddExerciseWidget;
+
 class Trainings extends StatefulWidget {
 
   @override
@@ -10,12 +12,12 @@ class Trainings extends StatefulWidget {
 class _TrainingsState extends State<Trainings> {
   
 
-  double
-    _height = 500.0,
-    _top = 0.0,
-    _maxHeight = 200.0,
-    _maxCollapseHeight = 50.0;
-  int _timeToAutoCollapseExpandMilliseconds = 100;
+  // double
+  //   _height = 500.0,
+  //   _top = 0.0,
+  //   _maxHeight = 200.0,
+  //   _maxCollapseHeight = 50.0;
+  // int _timeToAutoCollapseExpandMilliseconds = 100;
 
 // @override
 // void dispose() {
@@ -23,13 +25,23 @@ class _TrainingsState extends State<Trainings> {
 //   print('dispose');
 // }
 
-@override
-void deactivate() {
-  _top = 0;
-}
+// @override
+// void deactivate() {
+//   _top = 0;
+// }
 
   @override
   Widget build(BuildContext context) {
+
+      return Container(
+        height: 100.0,
+        child: AddExerciseWidget.AddExerciseInsideAlertDialog(
+          title: 'Add Exercise',
+          content: Text('Some content'),
+        ),
+      );
+      
+
     // return Center(child: Text('Progress'));
     // return Container(
     //   child: Align(
@@ -46,7 +58,7 @@ void deactivate() {
     //   )
     // );
 
-
+      /*
       return Container(
         padding: const EdgeInsets.only(top: 20.0),
         decoration: BoxDecoration(
@@ -114,20 +126,43 @@ void deactivate() {
                           height: 51.0,
                           color: Colors.lightGreen,
                           child: Center(
-                            child: Text(
-                              'Pull',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
+                            child: Icon(
+                              _top == 0 ? Icons.expand_more : Icons.expand_less,
+                              size: 40.0,
+                              color: Colors.black54)
                           ),
                         ),
                         clipper: CustomClipPath(),
                       )
                     ),
-                    onTap: () {
-                      print('Clicked');
+                    onTap: () async{
+                      if(_top == 0) { // expand it at all on click
+                        int _delayMilliseconds = 1;
+                        for(int i = 0; i <= _maxHeight; i++) {
+                          // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
+                          // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
+                          // therefore we just get each third pixels and we'll get x3 speed of expanding
+                          if(i % 3 == 0 || i == _maxHeight) {
+                            await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
+                            setState(() {
+                              _top = i.toDouble();
+                            });
+                          }
+                        }
+                      } else if(_top == _maxHeight) {
+                        int _delayMilliseconds = 1;
+                        for(int i = _maxHeight.toInt(); i >= 0; i--) {
+                          // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
+                          // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
+                          // therefore we just get each third pixels and we'll get x3 speed of expanding
+                          if(i % 3 == 0 || i == 0) {
+                            await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
+                            setState(() {
+                              _top = i.toDouble();
+                            });
+                          }
+                        }
+                      }
                     },
                     onPanUpdate: (DragUpdateDetails dragUpdateDetails) {
                       setState(() {
@@ -143,7 +178,6 @@ void deactivate() {
                     onPanEnd: (DragEndDetails dragEndDetails) async{
                       if(_top <= _maxCollapseHeight && _top != 0) { // if we expanded less then 50 pixels, collapse it at all
                         int _delayMilliseconds = (_timeToAutoCollapseExpandMilliseconds / _top.round()).round();
-                        // print(_delayMilliseconds);
                         for(int i = _top.round(); i >= 0; i--) {
                           await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                           setState(() {
@@ -152,18 +186,16 @@ void deactivate() {
                         }
                       } else if(_top > _maxCollapseHeight && _top != _maxHeight) { // if we expanded more then 50 pixels, expand it at all
                         int _delayMilliseconds = (_timeToAutoCollapseExpandMilliseconds / (_maxHeight - _top).round()).round();
-                        // print(_delayMilliseconds);
                         for(int i = (_maxHeight - (_maxHeight - _top)).round(); i <= _maxHeight; i++) {
                           // if(i % 3 == 0) is neede here because if we have e.g. 184 pixels to go, we can get
                           // the smallest int of millisecond - 1, so it will be expanded for 184 milliseconds, which is long
                           // therefore we just get each third pixels and we'll get x3 speed of expanding
-                          if(i % 3 == 0) {
+                          if(i % 3 == 0 || i == _maxHeight) {
                             await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                             setState(() {
                               _top = i.toDouble();
                             });
                           }
-
                         }
                       }
                     }
@@ -186,6 +218,7 @@ void deactivate() {
           ]
         )
       );
+      */
 
   }
 }
@@ -194,11 +227,6 @@ class CustomClipPath extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    // path.lineTo(0, 150);
-    // path.cubicTo(150, 150, 100, 200, 200, 200);
-    // path.cubicTo(300, 200, 250, 150, 400, 150);
-    // path.lineTo(400, 0);
-
     path.lineTo(0, 1);
     path.cubicTo(150, 1, 100, 51, 200, 51);
     path.cubicTo(300, 51, 250, 1, 400, 1);

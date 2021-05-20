@@ -44,14 +44,18 @@ class BlurryDialog extends StatelessWidget {
           title: title != null ? Center(child: Text(title, style: textStyle)) : title,
           // insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: (MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom) / verticalInsetPadding),
           insetPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 100),
-          content: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(top: 20),
-              child: Center(child: content),
-              width: MediaQuery.of(context).size.width,
-              // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
-            )
-          ),
+
+          content: content,
+
+          // content: SingleChildScrollView(
+          //   child: Container(
+          //     padding: EdgeInsets.only(top: 20),
+          //     child: Center(child: content),
+          //     width: MediaQuery.of(context).size.width,
+          //     // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+          //   )
+          // ),
+
           // content: SingleChildScrollView(
           //   child: Column(
           //     mainAxisAlignment: MainAxisAlignment.spaceBetween,

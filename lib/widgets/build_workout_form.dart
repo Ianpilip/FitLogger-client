@@ -10,6 +10,8 @@ import 'package:FitLogger/sub-views/dialog.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 import 'package:FitLogger/helpers/index_walker.dart';
 
+import 'package:FitLogger/widgets/add_exercise_inside_alertdialog.dart' as AddExerciseWidget;
+
 class BuildWorkoutForm {
 
   final Map<String, dynamic> data;
@@ -35,10 +37,48 @@ build(BuildContext context) async{
     }
 
     Widget buildContent() {
-      return WorkoutForm(
-        hint: "Workout duration 1h 15m",
-        workoutCommentController: _workoutCommentController,
-        data: data
+      return Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 81.0
+                ),
+                Container(
+                  // padding: EdgeInsets.only(top: 20),
+                  child: Center(
+                    child: WorkoutForm(
+                      hint: "Workout duration 1h 15m",
+                      workoutCommentController: _workoutCommentController,
+                      data: data
+                    )
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+                )
+              ]
+            )
+          ),
+          AddExerciseWidget.AddExerciseInsideAlertDialog(
+              title: 'Add Exercise',
+              content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text('1'),
+                    Text('2'),
+                    Text('3'),
+                    Text('4'),
+                    Text('5'),
+                    Text('6'),
+                    Text('7'),
+                    Text('8'),
+                    Text('9'),
+                  ]
+                )
+              )
+            )
+        ],
       );
     }
 

@@ -356,11 +356,26 @@ class _ExercisesState extends State<Exercises> {
 
                           BlurryDialog alert = BlurryDialog(
                             title: "Add new exercises",
-                            content: ExerciseForm(
-                              hint: "Bench press",
-                              exersiseNameController: _exersiseNameController,
-                              data: data
+
+                            content: SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(top: 20),
+                                child: Center(
+                                  child: ExerciseForm(
+                                    hint: "Bench press",
+                                    exersiseNameController: _exersiseNameController,
+                                    data: data
+                                  )),
+                                width: MediaQuery.of(context).size.width,
+                                // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+                              )
                             ),
+
+                            // content: ExerciseForm(
+                            //   hint: "Bench press",
+                            //   exersiseNameController: _exersiseNameController,
+                            //   data: data
+                            // ),
                             callbackConfirm: callbackConfirm,
                             callbackCancel: callbackCancel
                           );

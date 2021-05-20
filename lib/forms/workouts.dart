@@ -11,6 +11,7 @@ import 'package:FitLogger/constants/ui_settings.dart' as UIConstants;
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 import 'package:FitLogger/helpers/index_walker.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
+import 'package:FitLogger/widgets/add_exercise_inside_alertdialog.dart' as AddExerciseWidget;
 
 class WorkoutForm extends StatefulWidget {
   final String hint;
@@ -419,6 +420,27 @@ class _WorkoutFormState extends State<WorkoutForm> {
         Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200];
 
         return Container(
+          color: Colors.orange,
+          child: AddExerciseWidget.AddExerciseInsideAlertDialog(
+            title: 'Add Exercise',
+            content: Column(
+              children: [
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+                Text('Some content'),
+              ]
+            ),
+          ),
+        );
+
+        return Container(
           // color: Colors.transparent,
           child: Column(
             children: [
@@ -602,23 +624,25 @@ class _WorkoutFormState extends State<WorkoutForm> {
     return Container(
       child: Column(
         children: <Widget>[
-          _exercises(widget.workoutCommentController),
+          // _exercises(widget.workoutCommentController),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('1'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('2'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('3'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('4'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('5'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('6'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('7'),
           SizedBox(height: 20),
-          Text('SOME TEXT'),
+          Text('8'),
+          SizedBox(height: 20),
+          Text('9'),
           SizedBox(height: 20),
           Text('SOME TEXT'),
           SizedBox(height: 20),
