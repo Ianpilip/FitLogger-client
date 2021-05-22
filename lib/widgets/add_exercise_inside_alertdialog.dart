@@ -49,6 +49,10 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
 
   @override
   Widget build(BuildContext context) {
+    // @TODO
+    // Avoid each usage of afterBuild() method
+    // Maybe create a variable for that and change it in setState also
+    // so afterBuild() can be called only once at first time
     WidgetsBinding.instance.addPostFrameCallback((_) => afterBuild(context));
     
     // return Center(child: Text('Progress'));
