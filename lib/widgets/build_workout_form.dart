@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:hive/hive.dart';
@@ -25,16 +27,38 @@ class BuildWorkoutForm {
   final String title = 'Training day';
   final String hint = 'Workout duration 1h 15m';
 
-build(BuildContext context) async{
-    // print(data);
+
+    Timer _timer;
+    int start = 0;
+    StreamController streamController = new StreamController<int>();
+
+    void updateStateToGetNewUpdatedData(i) {
+      streamController.sink.add(i);
+      // const oneSec = Duration(seconds: 1);
+      // _timer = Timer.periodic(oneSec, (Timer timer) {
+      //   start++;
+      //   streamController.sink.add(start);
+      //   print('start value $start');
+      // });
+    }
+
+
+  build(BuildContext context) async{
+    
 
     void callbackConfirm () {
+      print('save workout');
+      print(['data', data]);
       Navigator.of(context).pop();
     }
 
     void callbackCancel() {
+      print('cancel workout');
       Navigator.of(context).pop();
     }
+
+   
+
 
     Widget buildContent() {
       return Stack(
@@ -51,7 +75,9 @@ build(BuildContext context) async{
                     child: WorkoutForm(
                       hint: "Workout duration 1h 15m",
                       workoutCommentController: _workoutCommentController,
-                      data: data
+                      data: data,
+                      updateStateToGetNewUpdatedData: updateStateToGetNewUpdatedData,
+                      instanceStreamController: streamController
                     )
                   ),
                   width: MediaQuery.of(context).size.width,
@@ -65,15 +91,26 @@ build(BuildContext context) async{
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text('1'),
-                    Text('2'),
-                    Text('3'),
-                    Text('4'),
-                    Text('5'),
-                    Text('6'),
-                    Text('7'),
-                    Text('8'),
-                    Text('9'),
+                    GestureDetector(
+                      child: Text('Add new exercise'),
+                      onTap: () {
+                        data['exercise from widget'] = {
+                          1111: 1111111,
+                          2222: 2222222,
+                          3333: 3333333
+                        };
+                        updateStateToGetNewUpdatedData(DateTime.now().millisecondsSinceEpoch);
+                      },
+                    ),
+                    Text('11'),
+                    Text('22'),
+                    Text('33'),
+                    Text('44'),
+                    Text('55'),
+                    Text('66'),
+                    Text('77'),
+                    Text('88'),
+                    Text('99'),
                   ]
                 )
               )

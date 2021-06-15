@@ -92,7 +92,7 @@ class CalendarRequests {
     String userID = userDataBox.get('userID');
     String tokenID = userDataBox.get('tokenID');
     String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-workout/$userID/$tokenID/$year/$month/$day';
-    Response response = await get(url);
+    Response response = await get(Uri.parse(url));
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
@@ -118,14 +118,14 @@ class CalendarRequests {
     });
     String url = LogicSettings.urlAddressToSendRequests + '/calendar/new-training-day';
     Map<String, String> headers = {"Content-type": "application/json"};
-    Response response = await post(url, headers: headers, body: json);
+    Response response = await post(Uri.parse(url), headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
 
   Future<Map<String, dynamic>> getAllWorkouts(String userID, String tokenID) async{
     String url = LogicSettings.urlAddressToSendRequests + '/calendar/get-all/$userID/$tokenID';
-    Response response = await get(url);
+    Response response = await get(Uri.parse(url));
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }

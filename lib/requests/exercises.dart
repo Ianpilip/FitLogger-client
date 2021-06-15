@@ -6,14 +6,14 @@ class ExercisesRequests {
 
   Future<Map<String, dynamic>> getAllBodyRegions() async{
     String url = LogicSettings.urlAddressToSendRequests + '/region/get-all';
-    Response response = await get(url);
+    Response response = await get(Uri.parse(url));
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
 
   Future<Map<String, dynamic>> getAllExercises(String userID, String tokenID) async{
     String url = LogicSettings.urlAddressToSendRequests + '/exercise/get-all/$userID/$tokenID';
-    Response response = await get(url);
+    Response response = await get(Uri.parse(url));
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
@@ -36,7 +36,7 @@ class ExercisesRequests {
     });
     String url = LogicSettings.urlAddressToSendRequests + '/exercise/create-update-delete-exercise';
     Map<String, String> headers = {"Content-type": "application/json"};
-    Response response = await post(url, headers: headers, body: json);
+    Response response = await post(Uri.parse(url), headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }

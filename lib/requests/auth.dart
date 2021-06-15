@@ -14,7 +14,7 @@ class AuthRequests {
       'restorePassword': restorePassword
     });
 
-    Response response = await post(url, headers: headers, body: json);
+    Response response = await post(Uri.parse(url), headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
@@ -27,7 +27,7 @@ class AuthRequests {
       'userID': userID
     });
 
-    Response response = await post(url, headers: headers, body: json);
+    Response response = await post(Uri.parse(url), headers: headers, body: json);
     Map<String, dynamic> jsonDecoded = jsonDecode(response.body);
     return jsonDecoded;
   }
