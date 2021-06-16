@@ -19,9 +19,9 @@ class WorkoutForm extends StatefulWidget {
   final TextEditingController workoutCommentController;
   final Map<String, dynamic> data;
   final Function updateStateToGetNewUpdatedData;
-  final instanceStreamController;
+  final streamController;
 
-  const WorkoutForm({Key key, this.hint, this.workoutCommentController, this.data, this.updateStateToGetNewUpdatedData, this.instanceStreamController}): super(key: key);
+  const WorkoutForm({Key key, this.hint, this.workoutCommentController, this.data, this.updateStateToGetNewUpdatedData, this.streamController}): super(key: key);
 
   @override
   _WorkoutFormState createState() => _WorkoutFormState();
@@ -67,22 +67,12 @@ class _WorkoutFormState extends State<WorkoutForm> {
     // }
     // 
   
-  // widget.updateStateToGetNewUpdatedData();
-  widget.instanceStreamController.stream.listen((data) {
+  widget.streamController.stream.listen((data) {
     print("listen value - $data");
     setState(() {
       updateDateTime = data;
     });
   });
-
-  // @override
-  // void initState() {
-    // widget.updateStateToGetNewUpdatedData();
-    // widget.instance.streamController.stream.listen((data) {
-    //   print("listen value- $data");
-    // });
-
-  // }
 
 
     if(IndexWalker(widget.data)['workout']['exercise'].value != null) {

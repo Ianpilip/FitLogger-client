@@ -14,6 +14,8 @@ import 'package:FitLogger/helpers/index_walker.dart';
 
 import 'package:FitLogger/widgets/add_exercise_inside_alertdialog.dart' as AddExerciseWidget;
 
+import 'get_body_regions_as_tabs.dart';
+
 class BuildWorkoutForm {
 
   final Map<String, dynamic> data;
@@ -28,18 +30,10 @@ class BuildWorkoutForm {
   final String hint = 'Workout duration 1h 15m';
 
 
-    Timer _timer;
-    int start = 0;
     StreamController streamController = new StreamController<int>();
 
-    void updateStateToGetNewUpdatedData(i) {
-      streamController.sink.add(i);
-      // const oneSec = Duration(seconds: 1);
-      // _timer = Timer.periodic(oneSec, (Timer timer) {
-      //   start++;
-      //   streamController.sink.add(start);
-      //   print('start value $start');
-      // });
+    void updateStateToGetNewUpdatedData(millisecondsSinceEpoch) {
+      streamController.sink.add(millisecondsSinceEpoch);
     }
 
 
@@ -77,7 +71,7 @@ class BuildWorkoutForm {
                       workoutCommentController: _workoutCommentController,
                       data: data,
                       updateStateToGetNewUpdatedData: updateStateToGetNewUpdatedData,
-                      instanceStreamController: streamController
+                      streamController: streamController
                     )
                   ),
                   width: MediaQuery.of(context).size.width,
@@ -102,15 +96,16 @@ class BuildWorkoutForm {
                         updateStateToGetNewUpdatedData(DateTime.now().millisecondsSinceEpoch);
                       },
                     ),
-                    Text('11'),
-                    Text('22'),
-                    Text('33'),
-                    Text('44'),
-                    Text('55'),
-                    Text('66'),
-                    Text('77'),
-                    Text('88'),
-                    Text('99'),
+                    AddBodyRegionsAsTabs()
+                    // Text('11'),
+                    // Text('22'),
+                    // Text('33'),
+                    // Text('44'),
+                    // Text('55'),
+                    // Text('66'),
+                    // Text('77'),
+                    // Text('88'),
+                    // Text('99'),
                   ]
                 )
               )
@@ -181,7 +176,7 @@ class BuildWorkoutForm {
     // );
     
     await showGeneralDialog(
-      barrierDismissible: true,
+      barrierDismissible: false,
       barrierLabel: '',
       barrierColor: Colors.black38,
       transitionDuration: Duration(milliseconds: 100),
