@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:FitLogger/constants/colors.dart' as ColorConstants;
 
+import 'add_exercise_content_for_slide_widget.dart';
+
 GlobalKey _key = GlobalKey();
 
 class AddExerciseInsideAlertDialog extends StatefulWidget {
 
   final String title;
-  final dynamic content;
+  // final dynamic content;
+  final dynamic mainContent;
+  final Function addButtonHandler;
+  final dynamic data;
 
-  const AddExerciseInsideAlertDialog({Key key, this.title, this.content}): super(key: key);
+  // const AddExerciseInsideAlertDialog({Key key, this.title, this.content}): super(key: key);
+  const AddExerciseInsideAlertDialog({Key key, this.title, this.mainContent, this.addButtonHandler, this.data}): super(key: key);
 
   @override
   _AddExerciseInsideAlertDialogState createState() => _AddExerciseInsideAlertDialogState();
@@ -24,7 +30,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
     _dynamicHeight = 51.0,
     _titleHeight = 30.0,
     _top = 0.0,
-    _maxHeight = 150.0,
+    _maxHeight = 250.0,
     _maxCollapseHeight = 50.0;
   int _timeToAutoCollapseExpandMilliseconds = 100;
   bool _changedWidthOfContainerForContent = false;
@@ -51,6 +57,24 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
       });
   }
 
+  void closeSlideWidget() async{
+    // Collapse it all after we clicked "Add new exercise"
+    int _delayMilliseconds = 1;
+    for(int i = _maxHeight.toInt(); i >= 0; i--) {
+      // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
+      // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
+      // therefore we just get each third pixels and we'll get x3 speed of expanding
+      if(i % 5 == 0 || i == 0) {
+        await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
+        setState(() {
+          _top = i.toDouble();
+          _dynamicHeight = _staticHeight +_top;
+        });
+      }
+    }
+    //
+  }
+
   @override
   Widget build(BuildContext context) {
     if(_changedWidthOfContainerForContent == false) WidgetsBinding.instance.addPostFrameCallback((_) => afterBuild(context));
@@ -70,6 +94,9 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
     //     )
     //   )
     // );
+
+
+
 
 // print(_dynamicHeight);
       return Container(
@@ -117,8 +144,56 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                       ),
                       // color: Color(ColorConstants.GHOST_WHITE),
                       child: SingleChildScrollView(
-                        child: widget.content
-                      ),
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              child: Text('Add new exercise'),
+                              onTap: () async{
+                                widget.data['exercise from widget'] = {
+                                  'new1111': 1111111,
+                                  'new2222': 2222222,
+                                  'new3333': 3333333
+                                };
+                                widget.addButtonHandler(DateTime.now().millisecondsSinceEpoch);
+
+                                // Collapse it all after we clicked "Add new exercise"
+                                int _delayMilliseconds = 1;
+                                for(int i = _maxHeight.toInt(); i >= 0; i--) {
+                                  // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
+                                  // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
+                                  // therefore we just get each third pixels and we'll get x3 speed of expanding
+                                  if(i % 5 == 0 || i == 0) {
+                                    await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
+                                    setState(() {
+                                      _top = i.toDouble();
+                                      _dynamicHeight = _staticHeight +_top;
+                                    });
+                                  }
+                                }
+                                //
+                              },
+                            ),
+                            AddExerciseContentForSlideWidget(
+                              addNewExerciseHandler: widget.addButtonHandler,
+                              closeSlideWidget: closeSlideWidget,
+                              data: widget.data
+                            )
+                            // widget.mainContent
+                            // Text('11'),
+                            // Text('22'),
+                            // Text('33'),
+                            // Text('44'),
+                            // Text('55'),
+                            // Text('66'),
+                            // Text('77'),
+                            // Text('88'),
+                            // Text('99'),
+                          ]
+                        )
+                      )                      
+                      // child: SingleChildScrollView(
+                      //   child: widget.mainContent
+                      // ),
                     ),
                   ),
                   Positioned(
@@ -159,7 +234,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 3 == 0 || i == _maxHeight) {
+                            if(i % 5 == 0 || i == _maxHeight) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();
@@ -173,7 +248,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 3 == 0 || i == 0) {
+                            if(i % 5 == 0 || i == 0) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();
@@ -210,7 +285,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have e.g. 184 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 184 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 3 == 0 || i == _maxHeight) {
+                            if(i % 5 == 0 || i == _maxHeight) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();

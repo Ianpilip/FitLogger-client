@@ -37,7 +37,7 @@ class _TrainingsState extends State<Trainings> {
         height: 100.0,
         child: AddExerciseWidget.AddExerciseInsideAlertDialog(
           title: 'Add Exercise',
-          content: Text('Some content'),
+          // mainContent: Text('Some content'),
         ),
       );
       

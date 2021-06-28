@@ -14,7 +14,6 @@ import 'package:FitLogger/helpers/index_walker.dart';
 
 import 'package:FitLogger/widgets/add_exercise_inside_alertdialog.dart' as AddExerciseWidget;
 
-import 'get_body_regions_as_tabs.dart';
 
 class BuildWorkoutForm {
 
@@ -82,33 +81,36 @@ class BuildWorkoutForm {
           ),
           AddExerciseWidget.AddExerciseInsideAlertDialog(
               title: 'Add Exercise',
-              content: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      child: Text('Add new exercise'),
-                      onTap: () {
-                        data['exercise from widget'] = {
-                          1111: 1111111,
-                          2222: 2222222,
-                          3333: 3333333
-                        };
-                        updateStateToGetNewUpdatedData(DateTime.now().millisecondsSinceEpoch);
-                      },
-                    ),
-                    AddBodyRegionsAsTabs()
-                    // Text('11'),
-                    // Text('22'),
-                    // Text('33'),
-                    // Text('44'),
-                    // Text('55'),
-                    // Text('66'),
-                    // Text('77'),
-                    // Text('88'),
-                    // Text('99'),
-                  ]
-                )
-              )
+              addButtonHandler: updateStateToGetNewUpdatedData,
+              data: data
+
+              // content: SingleChildScrollView(
+              //   child: Column(
+              //     children: [
+              //       GestureDetector(
+              //         child: Text('Add new exercise'),
+              //         onTap: () {
+              //           data['exercise from widget'] = {
+              //             1111: 1111111,
+              //             2222: 2222222,
+              //             3333: 3333333
+              //           };
+              //           updateStateToGetNewUpdatedData(DateTime.now().millisecondsSinceEpoch);
+              //         },
+              //       ),
+              //       AddBodyRegionsAsTabs()
+              //       // Text('11'),
+              //       // Text('22'),
+              //       // Text('33'),
+              //       // Text('44'),
+              //       // Text('55'),
+              //       // Text('66'),
+              //       // Text('77'),
+              //       // Text('88'),
+              //       // Text('99'),
+              //     ]
+              //   )
+              // )
             )
         ],
       );
