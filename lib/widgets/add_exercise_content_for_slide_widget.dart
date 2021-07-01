@@ -130,7 +130,16 @@ class _AddExerciseContentForSlideWidgetState extends State<AddExerciseContentFor
                   _chosenExerciseID = exercisesData[i]['_id'];
                   Future.delayed(Duration(milliseconds: 250), () => _chosenExerciseID = '');
                 });
-                widget.data['ADDED'] = exercisesData[i]['name'];
+                if(widget.data['exercises'].length > 0) {
+                  dynamic existingExercise = widget.data['exercises'].firstWhere(
+                    (exercise) => exercise['_id'] == exercisesData[i]['_id'],
+                    orElse: () => null,
+                  );
+                  print(['existingExercise', existingExercise]);
+                  if(existingExercise == null) widget.data['exercises'].add(exercisesData[i]);
+                } else {
+                  widget.data['exercises'].add(exercisesData[i]);
+                }
                 widget.closeSlideWidget();
                 widget.addNewExerciseHandler(DateTime.now().millisecondsSinceEpoch);
               },

@@ -143,6 +143,7 @@ class _CalendarPageState extends State<CalendarPage> {
         'year': _previewDayData['year'],
         'month': _previewDayData['month'],
         'day': _previewDayData['dayOfMonth'],
+        'exercises': [],
         'callbackFunction': () {
           setState(() {
             print('Close day form');

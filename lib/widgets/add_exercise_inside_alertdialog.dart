@@ -64,7 +64,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
       // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
       // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
       // therefore we just get each third pixels and we'll get x3 speed of expanding
-      if(i % 5 == 0 || i == 0) {
+      if(i % 8 == 0 || i == 0) {
         await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
         setState(() {
           _top = i.toDouble();
@@ -162,7 +162,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                                   // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
                                   // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
                                   // therefore we just get each third pixels and we'll get x3 speed of expanding
-                                  if(i % 5 == 0 || i == 0) {
+                                  if(i % 8 == 0 || i == 0) {
                                     await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                                     setState(() {
                                       _top = i.toDouble();
@@ -234,7 +234,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 5 == 0 || i == _maxHeight) {
+                            if(i % 8 == 0 || i == _maxHeight) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();
@@ -248,7 +248,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 5 == 0 || i == 0) {
+                            if(i % 8 == 0 || i == 0) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();
@@ -285,7 +285,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // if(i % 3 == 0) is neede here because if we have e.g. 184 pixels to go, we can get
                             // the smallest int of millisecond - 1, so it will be expanded for 184 milliseconds, which is long
                             // therefore we just get each third pixels and we'll get x3 speed of expanding
-                            if(i % 5 == 0 || i == _maxHeight) {
+                            if(i % 8 == 0 || i == _maxHeight) {
                               await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
                               setState(() {
                                 _top = i.toDouble();

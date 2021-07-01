@@ -69,7 +69,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
   
   widget.streamController.stream.listen((data) {
     print("listen value - $data");
-    print("listen value - ${widget.data}");
+    // print("listen value - ${widget.data}");
     setState(() {
       updateDateTime = data;
     });
@@ -197,12 +197,12 @@ class _WorkoutFormState extends State<WorkoutForm> {
   @override
   Widget build(BuildContext context) {
 
-    print(['data1', widget.data]);
-    widget.data['some exersice'] = {
-      1: 11,
-      2: 22,
-      3: 33
-    };
+    print(['Exercises', widget.data]);
+    // widget.data['some exersice'] = {
+    //   1: 11,
+    //   2: 22,
+    //   3: 33
+    // };
 
     // if(IndexWalker(widget.data)['workout']['exercise'].value != null) {
     //   widget.data['workout']['exercise'].asMap().forEach((indexExercise, exercise) {
@@ -230,6 +230,70 @@ class _WorkoutFormState extends State<WorkoutForm> {
     // }
 
     // print(['WorkoutForm', widget.data]);
+
+    Widget _getExercise(exercise) {
+      Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200];
+      // Color _color = Colors.grey;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 10.0),
+        decoration: BoxDecoration(
+          color: _color,
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: Theme(
+          data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+          child: ExpansionTile(
+            title: Text(exercise['name']),
+            textColor: Colors.black,
+            iconColor: Colors.black,
+            // backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
+            // backgroundColor: _color,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: _color,
+                  // borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                  ),
+                ),
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width,
+                child: Center(child: Text("Hi")),
+              ),
+              // new ListTile(
+              //   title: const Text('One'),
+              //   onTap: () {
+              //     print('One');
+              //   },              
+              // ),
+              // new ListTile(
+              //   title: const Text('Two'),
+              //   onTap: () {
+              //     print('Two');
+              //   },              
+              // ),
+              // new ListTile(
+              //   title: const Text('Three'),
+              //   onTap: () {
+              //     print('Three');
+              //   },              
+              // ),
+
+            ]
+          )
+        )
+      );
+    }
+
+      Widget _getExercises() {
+        List<Widget> exercises = widget.data['exercises'].map<Widget>((exercise) => _getExercise(exercise)).toList();
+
+        return Column(
+          children: exercises,
+        );
+      }
 
     Widget _textareaComment(TextEditingController controller) {
       return Container(
@@ -678,6 +742,7 @@ class _WorkoutFormState extends State<WorkoutForm> {
           // Text('SOME TEXT'),
           // SizedBox(height: 20),
           // Text('SOME TEXT'),
+          _getExercises(),
           SizedBox(height: 20),
           _textareaComment(widget.workoutCommentController),
           SizedBox(height: 10),
