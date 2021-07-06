@@ -178,7 +178,7 @@ class BuildWorkoutForm {
     // );
     
     await showGeneralDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       barrierLabel: '',
       barrierColor: Colors.black38,
       transitionDuration: Duration(milliseconds: 100),

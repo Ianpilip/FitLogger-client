@@ -1,3 +1,4 @@
+import 'package:FitLogger/forms/sets_reps.dart';
 import 'package:FitLogger/helpers/custom_material_color.dart';
 import 'package:FitLogger/widgets/build_workout_form.dart';
 /// FORM FOR CREATING/UPDATING/REMOVING WORKOUT DAY
@@ -52,6 +53,9 @@ class _WorkoutFormState extends State<WorkoutForm> {
   int justToCheck = 0;
   
   int updateDateTime = 0;
+
+  GlobalKey _key = GlobalKey();
+  double _heightOfEachAddedExercise = 0;
 
   @override
   void initState() {
@@ -194,8 +198,19 @@ class _WorkoutFormState extends State<WorkoutForm> {
   }
 
 
+  void afterBuild(BuildContext context) {
+      RenderBox renderedWidget = _key.currentContext.findRenderObject();
+      print(['!!!!!!', renderedWidget.size.height]);
+      setState(() {
+        _heightOfEachAddedExercise = renderedWidget.size.height;
+      });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+// print(widget.data['exercises'].length);
+    if(widget.data['exercises'].length == 1 && _heightOfEachAddedExercise == 0) WidgetsBinding.instance.addPostFrameCallback((_) => afterBuild(context));
 
     print(['Exercises', widget.data]);
     // widget.data['some exersice'] = {
@@ -231,64 +246,165 @@ class _WorkoutFormState extends State<WorkoutForm> {
 
     // print(['WorkoutForm', widget.data]);
 
-    Widget _getExercise(exercise) {
-      Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[200];
+    Widget _getExercise(exercise, index) {
+      Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[500];
       // Color _color = Colors.grey;
-      return Container(
-        margin: const EdgeInsets.only(bottom: 10.0),
-        decoration: BoxDecoration(
-          color: _color,
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: Theme(
-          data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
-          child: ExpansionTile(
-            title: Text(exercise['name']),
-            textColor: Colors.black,
-            iconColor: Colors.black,
-            // backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
-            // backgroundColor: _color,
-            children: <Widget>[
-              Container(
+      // return Container(
+      //   margin: const EdgeInsets.only(bottom: 10.0),
+      //   decoration: BoxDecoration(
+      //     color: _color,
+      //     borderRadius: BorderRadius.circular(30.0),
+      //   ),
+      //   child: Theme(
+      //     data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+      //     child: ExpansionTile(
+      //       // leading: Icon(Icons.laptop),
+      //       leading: Container(
+      //         padding: const EdgeInsets.only(right: 5.0),
+      //         decoration: BoxDecoration(
+      //           border: Border(
+      //             right: BorderSide(
+      //               color: Colors.grey,
+      //               width: 1.0,
+      //             ),
+      //           )
+      //         ),
+      //         child: Icon(Icons.touch_app)
+      //       ),
+      //       title: Text(exercise['name']),
+      //       textColor: Colors.black,
+      //       iconColor: Colors.black,
+      //       // backgroundColor: Theme.of(context).accentColor.withOpacity(0.025),
+      //       // backgroundColor: _color,
+      //       children: <Widget>[
+      //         Container(
+      //           decoration: BoxDecoration(
+      //             color: _color,
+      //             // borderRadius: BorderRadius.circular(30.0),
+      //             borderRadius: BorderRadius.only(
+      //               bottomRight: Radius.circular(30.0),
+      //               bottomLeft: Radius.circular(30.0),
+      //             ),
+      //           ),
+      //           height: MediaQuery.of(context).size.height * 0.1,
+      //           width: MediaQuery.of(context).size.width,
+      //           child: Center(child: Text("Hi")),
+      //         ),
+      //         // new ListTile(
+      //         //   title: const Text('One'),
+      //         //   onTap: () {
+      //         //     print('One');
+      //         //   },              
+      //         // ),
+      //         // new ListTile(
+      //         //   title: const Text('Two'),
+      //         //   onTap: () {
+      //         //     print('Two');
+      //         //   },              
+      //         // ),
+      //         // new ListTile(
+      //         //   title: const Text('Three'),
+      //         //   onTap: () {
+      //         //     print('Three');
+      //         //   },              
+      //         // ),
+
+      //       ]
+      //     )
+      //   )
+      // );
+
+
+
+
+// print(widget.data['exercises'].length);
+      return ListTile(
+        title: Container(
+          key: widget.data['exercises'].length == 1 ? _key : null,
+          margin: const EdgeInsets.only(bottom: 10.0),
+          decoration: BoxDecoration(
+            color: _color,
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Theme(
+            data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Container(
+                padding: const EdgeInsets.only(right: 5.0),
                 decoration: BoxDecoration(
-                  color: _color,
-                  // borderRadius: BorderRadius.circular(30.0),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
+                  border: Border(
+                    right: BorderSide(
+                      color: Colors.grey,
+                      width: 1.0,
+                    ),
+                  )
+                ),
+                child: ReorderableDragStartListener(
+                  index: index,
+                  child: const Icon(Icons.touch_app),
+                )
+              ),
+              title: Text(exercise['name']),
+              textColor: Colors.black,
+              iconColor: Colors.black,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: _color,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(30.0),
+                      bottomLeft: Radius.circular(30.0),
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: SetsRepsForm(exercises: widget.data['exercises'])
                   ),
                 ),
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width,
-                child: Center(child: Text("Hi")),
-              ),
-              // new ListTile(
-              //   title: const Text('One'),
-              //   onTap: () {
-              //     print('One');
-              //   },              
-              // ),
-              // new ListTile(
-              //   title: const Text('Two'),
-              //   onTap: () {
-              //     print('Two');
-              //   },              
-              // ),
-              // new ListTile(
-              //   title: const Text('Three'),
-              //   onTap: () {
-              //     print('Three');
-              //   },              
-              // ),
-
-            ]
+              ]
+            )
           )
-        )
+        ),
+        key: ValueKey(exercise['_id']),
       );
+
+
+
+
     }
 
       Widget _getExercises() {
-        List<Widget> exercises = widget.data['exercises'].map<Widget>((exercise) => _getExercise(exercise)).toList();
+        List<Widget> exercises = widget.data['exercises'].asMap().entries.map<Widget>((exercise) => _getExercise(exercise.value, exercise.key)).toList();
+
+        void _onReorder(int oldIndex, int newIndex) {
+          setState(
+            () {
+              if (newIndex > oldIndex) {
+                newIndex -= 1;
+              }
+              // final Widget item = widget.data['exercises'].removeAt(oldIndex);
+              final Map<String, dynamic> item = Map<String, dynamic>.from(widget.data['exercises'].removeAt(oldIndex));
+              widget.data['exercises'].insert(newIndex, item);
+            },
+          );
+        }
+
+        return Container(
+          // height: widget.data['exercises'].length < 6 ? widget.data['exercises'].length * _heightOfEachAddedExercise : 6 * _heightOfEachAddedExercise,
+          height: MediaQuery.of(context).size.height * 0.1 + _heightOfEachAddedExercise * 2.5,
+          child: Center(child:Theme(
+            data: ThemeData(
+              canvasColor: Colors.transparent, // remove dragging background color
+              shadowColor: Colors.transparent, // remove dragging shadow
+            ),
+            child: ReorderableListView(
+              buildDefaultDragHandles: false,
+              onReorder: _onReorder,
+              children: exercises
+            )
+          ))
+        );
 
         return Column(
           children: exercises,
@@ -296,6 +412,88 @@ class _WorkoutFormState extends State<WorkoutForm> {
       }
 
     Widget _textareaComment(TextEditingController controller) {
+
+        Color _color = customMaterialColor(Color(ColorConstants.GHOST_WHITE))[500];
+
+        return Container(
+          padding: EdgeInsets.only(left: 20, right: 20),
+          decoration: BoxDecoration(
+            color: _color,
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Theme(
+            data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+            child: ExpansionTile(
+              title: Text('Comments to the workout'),
+              textColor: Colors.black,
+              iconColor: Colors.black,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    color: _color,
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(30.0),
+                      bottomLeft: Radius.circular(30.0),
+                    ),
+                  ),
+                  // height: MediaQuery.of(context).size.height * 0.1,
+                  // width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        TextField(
+                          onChanged: (value) {
+                            widget.data['comment'] = value;
+                            int isSymbolsRemainsIsBiggerThanZero = LogicSettings.exerciseNameLength - value.length;
+                            setState(() {
+                              _symbolsRemains = isSymbolsRemainsIsBiggerThanZero;
+                            });
+                            if(isSymbolsRemainsIsBiggerThanZero == 0) {
+                              _maxAvailableExerciseNameText = controller.text;
+                            }
+                            if(isSymbolsRemainsIsBiggerThanZero < 0) {
+                              setState(() {
+                                _symbolsRemains = 0;
+                              });
+                              // The code below sets a current string and puts a cursor to the end of the string
+                              // Thios is the only way to set a cursor to the end, others work async, so it jumps to start
+                              controller.value = TextEditingValue(
+                                text: _maxAvailableExerciseNameText,
+                                selection: TextSelection.collapsed(offset: _maxAvailableExerciseNameText.length),
+                              );
+                            }
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 3,
+                          controller: controller,
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+                            hintText: widget.hint,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(color: Colors.black87, width: 2)
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: BorderSide(color: Colors.black54, width: 1)
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text('Symbols remained: ${_symbolsRemains.toString()}'),
+                        SizedBox(height: 10)
+                      ]
+                    ),
+                  ),
+                ),
+              ]
+            )
+          )
+        );
+
+
+
       return Container(
         padding: EdgeInsets.only(left: 20, right: 20),
         child: TextField(
@@ -744,9 +942,10 @@ class _WorkoutFormState extends State<WorkoutForm> {
           // Text('SOME TEXT'),
           _getExercises(),
           SizedBox(height: 20),
+          Divider(
+            color: Colors.black,
+          ),
           _textareaComment(widget.workoutCommentController),
-          SizedBox(height: 10),
-          Text('Symbols remained: ${_symbolsRemains.toString()}')
         ]
       )
     );
