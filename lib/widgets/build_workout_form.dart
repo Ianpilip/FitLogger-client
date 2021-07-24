@@ -47,6 +47,7 @@ class BuildWorkoutForm {
 
     void callbackCancel() {
       print('cancel workout');
+      data['exercises'] = [];
       Navigator.of(context).pop();
     }
 

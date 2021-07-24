@@ -94,6 +94,7 @@ class _AddExerciseContentForSlideWidgetState extends State<AddExerciseContentFor
     }
 
     Container _getListOfExercises() {
+      // print(['111', exercisesDataBox.get('exercises'), '111']);
       List<GestureDetector> exercises = [];
       // @TODO: Investigate why here comes null in two cases (splash red screen):
       // 1. When we login
@@ -101,7 +102,19 @@ class _AddExerciseContentForSlideWidgetState extends State<AddExerciseContentFor
       if(exercisesDataBox.get('exercises') != null) {
         List<dynamic> exercisesData = [];
         if(_currentTabBodyRegion == LogicConstants.allItems) {
-          exercisesData = exercisesDataBox.get('exercises');
+          // exercisesData = List.from(exercisesDataBox.get('exercises'));
+          // exercisesData = []..addAll(exercisesDataBox.get('exercises'));
+          // exercisesData = [...exercisesDataBox.get('exercises')];
+          // exercisesData = exercisesDataBox.get('exercises').map((element) {
+          //   print(element);
+          //   // return element;
+          // });
+          for(int i = 0; i < exercisesDataBox.get('exercises').length; i++) {
+            Map<dynamic, dynamic> temp = {...exercisesDataBox.get('exercises')[i]};
+            exercisesData.add(temp);
+            // print(exercisesDataBox.get('exercises')[i]);
+          }
+          // exercisesData = [{'_id': '606e260c730097c6a2f46f7c', 'userID': '602c45852d220516f33f20db', 'regionID': '603ac277df746a381172f190', 'name': 'Some long long idiotic name of the exercise, which can’t be in one row', 'showInUI': false, '__v': 0}];
         } else {
           for(int e = 0; e < exercisesDataBox.get('exercises').length; e++) {
             if(exercisesDataBox.get('exercises')[e]['regionID'] == _currentTabBodyRegion) exercisesData.add(exercisesDataBox.get('exercises')[e]);
@@ -113,7 +126,7 @@ class _AddExerciseContentForSlideWidgetState extends State<AddExerciseContentFor
 
             GestureDetector(
               child: Card(
-                color: exercisesData[i]['_id'] == _chosenExerciseID ? Colors.orange : Colors.white,
+                color: exercisesData[i]['_id'] == _chosenExerciseID ? Color(ColorConstants.LIGHT_LIGHT_GREY) : Colors.white,
                 shape: ContinuousRectangleBorder(
                   borderRadius: BorderRadius.all(new Radius.circular(15.0)),
                 ),
@@ -166,7 +179,7 @@ class _AddExerciseContentForSlideWidgetState extends State<AddExerciseContentFor
       // If you put a widget before the ListView, you should wrap the ListView with a MediaQuery.removePadding widget (with removeTop: true).
       // Otherwise you will have a big padding-top by default under the hood
       return Container(
-        // color: Colors.green,
+        color: Colors.white,
         height: 200.0,
         width: MediaQuery.of(context).size.width,
         child: MediaQuery.removePadding(

@@ -28,7 +28,7 @@ class WorkoutForm extends StatefulWidget {
   _WorkoutFormState createState() => _WorkoutFormState();
 }
 
-class _WorkoutFormState extends State<WorkoutForm> {
+class _WorkoutFormState extends State<WorkoutForm> with TickerProviderStateMixin {
 
   // TextEditingController _exersiseNameController = TextEditingController();
 
@@ -57,27 +57,22 @@ class _WorkoutFormState extends State<WorkoutForm> {
   GlobalKey _key = GlobalKey();
   double _heightOfEachAddedExercise = 0;
 
+  bool _turnRotationForExpansionTile = false;
+
   @override
   void initState() {
     super.initState();
     widget.workoutCommentController.text = IndexWalker(widget.data)['workout']['comment'].value;
     
-    // int uomIndex;
-    // if(
-    //   IndexWalker(widget.data)['workout']['uom'].value != null &&
-    //   IndexWalker(widget.data)['workout']['exercise'][0]['uom'].value != null
-    // ) {
-    //   uomIndex = widget.data['workout']['uom'][widget.data['workout']['exercise'][0]['uom']];
-    // }
-    // 
-  
-  widget.streamController.stream.listen((data) {
-    print("listen value - $data");
-    // print("listen value - ${widget.data}");
-    setState(() {
-      updateDateTime = data;
+
+    
+    widget.streamController.stream.listen((data) {
+      print("listen value - $data");
+      // print("listen value - ${widget.data}");
+      setState(() {
+        updateDateTime = data;
+      });
     });
-  });
 
 
     if(IndexWalker(widget.data)['workout']['exercise'].value != null) {
@@ -162,6 +157,8 @@ class _WorkoutFormState extends State<WorkoutForm> {
   //         if(exercisesDataBox.get('exercises')[e]['regionID'] == bodyRegionsData[bodyRegionController.selectedItem]['_id']) exercisesItems.add(exercisesDataBox.get('exercises')[e]);
   //       }
   //     }
+
+
 
 
   }
@@ -315,57 +312,150 @@ class _WorkoutFormState extends State<WorkoutForm> {
       // );
 
 
+    // AnimationController _controller = AnimationController(
+    //   duration: const Duration(milliseconds: 500),
+    //   vsync: this,
+    // )..repeat(reverse: true);
+    
+    // AnimationController _controller = _turnRotationForExpansionTile == false ?
+    //                                     AnimationController(vsync: this, duration: Duration(milliseconds: 300)) :
+    //                                     AnimationController(vsync: this, duration: Duration(milliseconds: 300))..animateTo(0.5);
 
+    AnimationController _controller = null;
+    if(_turnRotationForExpansionTile == false) {
+      _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300))..forward();
+    } else {
+      _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300))..animateTo(0.5);
+    }
+                                        
+    // Animation<double> _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    Animation<double> _animation = Tween(begin: _turnRotationForExpansionTile == false ? 0.5 : 0.0, end: 1.0).animate(_controller);
 
+    // Animation<double> _animation = CurvedAnimation(
+    //   parent: _controller,
+    //   curve: Curves.elasticOut,
+    // );
 // print(widget.data['exercises'].length);
-      return ListTile(
-        title: Container(
-          key: widget.data['exercises'].length == 1 ? _key : null,
-          margin: const EdgeInsets.only(bottom: 10.0),
-          decoration: BoxDecoration(
-            color: _color,
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          child: Theme(
-            data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
-            child: ExpansionTile(
-              leading: Container(
-                padding: const EdgeInsets.only(right: 5.0),
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(
-                      color: Colors.grey,
-                      width: 1.0,
-                    ),
-                  )
-                ),
-                child: ReorderableDragStartListener(
-                  index: index,
-                  child: const Icon(Icons.touch_app),
-                )
+      return Stack(
+        children: [
+          ListTile(
+            title: Container(
+              key: widget.data['exercises'].length == 1 ? _key : null,
+              margin: const EdgeInsets.only(bottom: 10.0),
+              decoration: BoxDecoration(
+                color: _color,
+                borderRadius: BorderRadius.circular(30.0),
               ),
-              title: Text(exercise['name']),
-              textColor: Colors.black,
-              iconColor: Colors.black,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: _color,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
+              child: Theme(
+                data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+                child: ExpansionTile(
+                  // onExpansionChanged: (val) {
+                  //   setState(() {
+                  //     _turnRotationForExpansionTile = val;
+                  //   });
+                  // },
+                  // trailing: Wrap(
+                  //   spacing: 12, // space between two icons
+                  //   children: <Widget>[
+                  //     RotationTransition(
+                  //       turns: _animation,
+                  //       child: const Icon(Icons.expand_more),
+                  //     ),
+                  //     GestureDetector(
+                  //       child: Icon(Icons.delete_forever, size: 25.0, color: Colors.grey,),
+                  //       onTap: () {
+                  //         print('remove');
+                  //       }
+                  //     )
+                  //   ]),
+
+                  leading: Container(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        right: BorderSide(
+                          color: Colors.grey,
+                          width: 1.0,
+                        ),
+                      )
                     ),
+                    child: ReorderableDragStartListener(
+                      index: index,
+                      child: const Icon(Icons.touch_app),
+                    )
                   ),
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: SetsRepsForm(exercises: widget.data['exercises'])
-                  ),
+                  
+                  // trailing: Container(
+                  //   padding: const EdgeInsets.only(left: 5.0),
+                  //   decoration: BoxDecoration(
+                  //     border: Border(
+                  //       left: BorderSide(
+                  //         color: Colors.grey,
+                  //         width: 1.0,
+                  //       ),
+                  //     )
+                  //   ),
+                  //   child: ReorderableDragStartListener(
+                  //     index: index,
+                  //     child: const Icon(Icons.touch_app),
+                  //   )
+                  // ),
+                  title: Text(exercise['name']),
+                  textColor: Colors.black,
+                  iconColor: Colors.black,
+                  children: <Widget>[
+                    Container(
+                      decoration: BoxDecoration(
+                        color: _color,
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(30.0),
+                          bottomLeft: Radius.circular(30.0),
+                        ),
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: SetsRepsForm(
+                          exercises: widget.data['exercises'],
+                          currentExerciseID: exercise['_id']
+                        )
+                      ),
+                    ),
+                  ]
+                )
+              )
+            ),
+          ),
+          new Positioned(
+            right: 0.0,
+            top: (_heightOfEachAddedExercise - 30) / 2,
+            child: GestureDetector(
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  // color: Colors.orange,
+                  color: customMaterialColor(Color(ColorConstants.GHOST_WHITE))[500],
+                  borderRadius: BorderRadius.circular(100),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.9),
+                      spreadRadius: 0,
+                      blurRadius: 4,
+                      offset: Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
-              ]
+                // child: Icon(Icons.delete_forever, size: 25.0, color: Colors.grey,),
+                child: Icon(Icons.clear, size: 25.0, color: Colors.grey,),
+              ),
+              onTap: () {
+                print('remove');
+              }
             )
-          )
-        ),
+          ),
+        ],
+
         key: ValueKey(exercise['_id']),
       );
 
@@ -727,19 +817,19 @@ class _WorkoutFormState extends State<WorkoutForm> {
           // color: Colors.transparent,
           child: Column(
             children: [
-              Container(
-                height: 50.0,
-                width: 500.0,
-                child: Center(child: Text('Add new exercise')),
-                decoration: BoxDecoration(
-                  // color: Color(ColorConstants.GHOST_WHITE),
-                  color: _color,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                ),
-              ),
+              // Container(
+              //   height: 50.0,
+              //   width: 500.0,
+              //   child: Center(child: Text('Add new exercise')),
+              //   decoration: BoxDecoration(
+              //     // color: Color(ColorConstants.GHOST_WHITE),
+              //     color: _color,
+              //     borderRadius: BorderRadius.only(
+              //       topLeft: Radius.circular(30.0),
+              //       topRight: Radius.circular(30.0),
+              //     ),
+              //   ),
+              // ),
               Container(
                 // color: Color(ColorConstants.GHOST_WHITE),
                 decoration: BoxDecoration(

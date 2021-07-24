@@ -317,8 +317,10 @@ class _ExercisesState extends State<Exercises> {
                             Transform.scale(
                               scale: 0.8,
                               child: CupertinoSwitch(
-                                trackColor: Colors.black12,
-                                activeColor: Color(ColorConstants.DARK_OLIVE_GREEN),
+                                // trackColor: Colors.black26,
+                                trackColor: customMaterialColor(Color(ColorConstants.GHOST_WHITE))[500],
+                                // activeColor: Color(ColorConstants.DARK_OLIVE_GREEN),
+                                activeColor: customMaterialColor(Color(ColorConstants.BLUE))[100],
                                 value: _showAllExercises,
                                 onChanged: _changeShowAllExercises,
                               )
@@ -326,13 +328,29 @@ class _ExercisesState extends State<Exercises> {
                           ],
                         )
                       ),
-                      RaisedButton(
-                        // shape: CircleBorder(),
-                        shape: CircleBorder(side: BorderSide(color: Colors.black87)),
-                        color: Colors.white,
-                        child: Icon(Icons.add, color: Colors.black87, size: 40),
-                        onPressed: () {
-                          
+
+
+                      GestureDetector(
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            // color: Colors.orange,
+                            color: customMaterialColor(Color(ColorConstants.GHOST_WHITE))[500],
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.9),
+                                spreadRadius: 0,
+                                blurRadius: 1,
+                                offset: Offset(0, 0), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          // child: Icon(Icons.delete_forever, size: 25.0, color: Colors.grey,),
+                          child: Icon(Icons.add, size: 30.0, color: Colors.grey,),
+                        ),
+                        onTap: () {
                           data = {
                             'exerciseName': '',
                             'exerciseID': '',
@@ -395,8 +413,80 @@ class _ExercisesState extends State<Exercises> {
                                 ),
                             context: context,
                           );
-                        },
+                        }
                       )
+
+                      // RaisedButton(
+                      //   // shape: CircleBorder(),
+                      //   shape: CircleBorder(side: BorderSide(color: Colors.black87)),
+                      //   color: Colors.white,
+                      //   child: Icon(Icons.add, color: Colors.black87, size: 40),
+                      //   onPressed: () {
+                          
+                      //     data = {
+                      //       'exerciseName': '',
+                      //       'exerciseID': '',
+                      //       'bodyRegionID': '',
+                      //       'showInUI': true,
+                      //     };
+
+                      //     // Navigator.of(context).pop() removes alert dialog
+                      //     VoidCallback callbackConfirm = () {
+                      //       Navigator.of(context).pop();
+                      //       // print(_exersiseNameController.text),
+                      //       createUpdateDeleteExercise();
+                      //       _exersiseNameController.clear();
+                      //     };
+
+                      //     VoidCallback callbackCancel = () => {
+                      //       Navigator.of(context).pop(),
+                      //       // print(_exersiseNameController.text),
+                      //       _exersiseNameController.clear()
+                      //     };
+
+                      //     BlurryDialog alert = BlurryDialog(
+                      //       title: "Add new exercises",
+
+                      //       content: SingleChildScrollView(
+                      //         child: Container(
+                      //           padding: EdgeInsets.only(top: 20),
+                      //           child: Center(
+                      //             child: ExerciseForm(
+                      //               hint: "Bench press",
+                      //               exersiseNameController: _exersiseNameController,
+                      //               data: data
+                      //             )),
+                      //           width: MediaQuery.of(context).size.width,
+                      //           // height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom,
+                      //         )
+                      //       ),
+
+                      //       // content: ExerciseForm(
+                      //       //   hint: "Bench press",
+                      //       //   exersiseNameController: _exersiseNameController,
+                      //       //   data: data
+                      //       // ),
+                      //       callbackConfirm: callbackConfirm,
+                      //       callbackCancel: callbackCancel
+                      //     );
+
+                      //     return showGeneralDialog(
+                      //       barrierDismissible: true,
+                      //       barrierLabel: '',
+                      //       barrierColor: Colors.black38,
+                      //       transitionDuration: Duration(milliseconds: 100),
+                      //       pageBuilder: (ctx, anim1, anim2) => alert,
+                      //       transitionBuilder: (ctx, anim1, anim2, child) => BackdropFilter(
+                      //           filter: ImageFilter.blur(sigmaX: 4 * anim1.value, sigmaY: 4 * anim1.value),
+                      //               child: FadeTransition(
+                      //                   child: child,
+                      //                   opacity: anim1,
+                      //               ),
+                      //           ),
+                      //       context: context,
+                      //     );
+                      //   },
+                      // )
                     ],
                   ),
                   SizedBox(height: 15),

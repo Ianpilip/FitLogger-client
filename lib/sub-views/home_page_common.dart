@@ -104,12 +104,12 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                       text: TextSpan(
                         children: [
                           WidgetSpan(
-                            child: Icon(Icons.show_chart)
+                            child: Icon(Icons.table_rows)
                           ),
                         ],
                       )
                     ),
-                    Text('Progress')
+                    Text('Hitory')
                   ]
                 )
               )

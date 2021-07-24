@@ -100,6 +100,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
 
 // print(_dynamicHeight);
       return Container(
+        // color: Colors.orange,
         height: _dynamicHeight + _titleHeight,
         // color: Colors.green,
         child: Column(
@@ -111,7 +112,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
               // color: Colors.grey,
               child: Center(child: Text(widget.title, style: TextStyle(fontSize: 18))),
               decoration: BoxDecoration(
-                color: Colors.lime,
+                color: Color(ColorConstants.LIGHT_LIGHT_GREY),
                 // borderRadius: BorderRadius.circular(10),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
@@ -130,7 +131,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                       width: double.infinity,
                       height: _top,
                       decoration: BoxDecoration(
-                        color: Color(ColorConstants.GHOST_WHITE),
+                        // color: Color(ColorConstants.GHOST_WHITE),
                         border: Border(
                           left: BorderSide(
                             color: Colors.black12,
@@ -146,33 +147,34 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            GestureDetector(
-                              child: Text('Add new exercise'),
-                              onTap: () async{
-                                widget.data['exercise from widget'] = {
-                                  'new1111': 1111111,
-                                  'new2222': 2222222,
-                                  'new3333': 3333333
-                                };
-                                widget.addButtonHandler(DateTime.now().millisecondsSinceEpoch);
+                            SizedBox(height: 10,),
+                            // GestureDetector(
+                            //   child: Text('Add new exercise'),
+                            //   onTap: () async{
+                            //     widget.data['exercise from widget'] = {
+                            //       'new1111': 1111111,
+                            //       'new2222': 2222222,
+                            //       'new3333': 3333333
+                            //     };
+                            //     widget.addButtonHandler(DateTime.now().millisecondsSinceEpoch);
 
-                                // Collapse it all after we clicked "Add new exercise"
-                                int _delayMilliseconds = 1;
-                                for(int i = _maxHeight.toInt(); i >= 0; i--) {
-                                  // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
-                                  // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
-                                  // therefore we just get each third pixels and we'll get x3 speed of expanding
-                                  if(i % 8 == 0 || i == 0) {
-                                    await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
-                                    setState(() {
-                                      _top = i.toDouble();
-                                      _dynamicHeight = _staticHeight +_top;
-                                    });
-                                  }
-                                }
-                                //
-                              },
-                            ),
+                            //     // Collapse it all after we clicked "Add new exercise"
+                            //     int _delayMilliseconds = 1;
+                            //     for(int i = _maxHeight.toInt(); i >= 0; i--) {
+                            //       // if(i % 3 == 0) is neede here because if we have the height of e.g. 400 pixels to go, we can get
+                            //       // the smallest int of millisecond - 1, so it will be expanded for 400 milliseconds, which is long
+                            //       // therefore we just get each third pixels and we'll get x3 speed of expanding
+                            //       if(i % 8 == 0 || i == 0) {
+                            //         await Future.delayed(Duration(milliseconds: _delayMilliseconds), () => {});
+                            //         setState(() {
+                            //           _top = i.toDouble();
+                            //           _dynamicHeight = _staticHeight +_top;
+                            //         });
+                            //       }
+                            //     }
+                            //     //
+                            //   },
+                            // ),
                             AddExerciseContentForSlideWidget(
                               addNewExerciseHandler: widget.addButtonHandler,
                               closeSlideWidget: closeSlideWidget,
@@ -215,7 +217,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // it will be Ok on all devices with different screens and paddings/margins
                             // width: MediaQuery.of(context).size.width - 65,
                             height: 51.0,
-                            color: Colors.lightGreen,
+                            color: Color(ColorConstants.LIGHT_LIGHT_GREY),
                             child: Center(
                               child: Icon(
                                 _top == 0 ? Icons.expand_more : Icons.expand_less,
