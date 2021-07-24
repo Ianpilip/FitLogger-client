@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
+import 'package:google_fonts/google_fonts.dart';
+
 RichText deleteExercise(Map<dynamic, dynamic>exercise) {
   return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.black87, fontSize: 18),
+        style: GoogleFonts.balsamiqSans(color: Colors.black87, fontSize: 18),
         children: <InlineSpan>[
           TextSpan(text: 'Are you sure you want to delete exercise '),
           TextSpan(text: exercise['name'], style: TextStyle(fontWeight: FontWeight.bold)),
@@ -20,7 +22,7 @@ RichText deleteExercise(Map<dynamic, dynamic>exercise) {
 RichText showHideExercise(Map<dynamic, dynamic>exercise) {
   return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.black87, fontSize: 18),
+        style: GoogleFonts.balsamiqSans(color: Colors.black87, fontSize: 18),
         children: <InlineSpan>[
           TextSpan(text: 'Are you sure you want to make exercise '),
           TextSpan(text: exercise['name'], style: TextStyle(fontWeight: FontWeight.bold)),

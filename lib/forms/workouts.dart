@@ -5,6 +5,7 @@ import 'package:FitLogger/widgets/build_workout_form.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import "package:collection/collection.dart";
 
@@ -514,7 +515,7 @@ class _WorkoutFormState extends State<WorkoutForm> with TickerProviderStateMixin
           child: Theme(
             data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
             child: ExpansionTile(
-              title: Text('Comments to the workout'),
+              title: Text('Comments to the workout', style: GoogleFonts.balsamiqSans()),
               textColor: Colors.black,
               iconColor: Colors.black,
               children: <Widget>[
@@ -558,7 +559,7 @@ class _WorkoutFormState extends State<WorkoutForm> with TickerProviderStateMixin
                           controller: controller,
                           style: TextStyle(fontSize: 20, color: Colors.black),
                           decoration: InputDecoration(
-                            hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+                            hintStyle: GoogleFonts.balsamiqSans(fontSize: 16, color: Colors.grey),
                             hintText: widget.hint,
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),

@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 
 import 'package:FitLogger/constants/logic_settings.dart' as LogicSettings;
@@ -126,7 +127,12 @@ class _ExerciseFormState extends State<ExerciseForm> {
     List<Widget> cupertinoPickerItems = [];
     bodyRegions.forEach((item) {
       cupertinoPickerItems.add(
-        Center(child: Text(item['name']))
+        Center(
+          child: Text(
+            item['name'],
+            style: GoogleFonts.balsamiqSans()
+          )
+        )
       );
     });
 

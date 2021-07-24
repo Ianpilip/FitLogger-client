@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:FitLogger/views/calendar.dart' as Calendar;
 import 'package:FitLogger/views/exercises.dart';
 import 'package:FitLogger/views/trainings.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:FitLogger/constants/hive_boxes_names.dart';
 
@@ -13,7 +14,18 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
       title: Row(
         children: [
           SizedBox(width: 30.0,),
-          Expanded(child: Center(child: Text('FitLogger', style: TextStyle(fontSize: 24)))),
+          Expanded(
+            child: Center(
+              child: Text(
+                'FitLogger',
+                style: GoogleFonts.balsamiqSans(
+                  textStyle: TextStyle(
+                    fontSize: 24.0
+                  ),
+                )
+              )
+            )
+          ),
           GestureDetector(
             child: Icon(Icons.logout, size: 30.0, color: Colors.black87,),
             onTap: () {
@@ -71,7 +83,10 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                         ],
                       )
                     ),
-                    Text('Workouts')
+                    Text(
+                      'Workouts',
+                      style: GoogleFonts.balsamiqSans()
+                    )
                   ]
                 )
               )
@@ -90,7 +105,10 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                         ],
                       )
                     ),
-                    Text('Exercises')
+                    Text(
+                      'Exercises',
+                      style: GoogleFonts.balsamiqSans()
+                    )
                   ]
                 )
               )
@@ -109,7 +127,10 @@ Scaffold getCommonHomePage(BuildContext context, TabController _tabController) {
                         ],
                       )
                     ),
-                    Text('Hitory')
+                    Text(
+                      'History',
+                      style: GoogleFonts.balsamiqSans()
+                    )
                   ]
                 )
               )
