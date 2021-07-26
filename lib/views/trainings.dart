@@ -33,6 +33,16 @@ class _TrainingsState extends State<Trainings> {
   @override
   Widget build(BuildContext context) {
 
+      return Align(
+        alignment: Alignment.center,
+          child: Text(
+            'History',
+            style: TextStyle(
+              fontSize: 24.0
+            )
+        )
+      );
+
       return Container(
         height: 100.0,
         child: AddExerciseWidget.AddExerciseInsideAlertDialog(

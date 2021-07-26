@@ -112,7 +112,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
               // color: Colors.grey,
               child: Center(child: Text(widget.title, style: TextStyle(fontSize: 18))),
               decoration: BoxDecoration(
-                color: Color(ColorConstants.LIGHT_LIGHT_GREY),
+                color: Color(ColorConstants.GHOST_WHITE_DEEP2),
                 // borderRadius: BorderRadius.circular(10),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
@@ -217,7 +217,7 @@ class _AddExerciseInsideAlertDialogState extends State<AddExerciseInsideAlertDia
                             // it will be Ok on all devices with different screens and paddings/margins
                             // width: MediaQuery.of(context).size.width - 65,
                             height: 51.0,
-                            color: Color(ColorConstants.LIGHT_LIGHT_GREY),
+                            color: Color(ColorConstants.GHOST_WHITE_DEEP2),
                             child: Center(
                               child: Icon(
                                 _top == 0 ? Icons.expand_more : Icons.expand_less,

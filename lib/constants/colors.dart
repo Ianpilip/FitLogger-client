@@ -12,6 +12,9 @@ const int LIGHT_LIGHT_GREY = 4294177779;
 const int TRANSPARENT = 16777215;
 const int SNOW = 4294966010;
 const int GHOST_WHITE = 4294506751;
+const int GHOST_WHITE_DEEP = 4290232555;
+const int GHOST_WHITE_DEEP1 = 4291547890;
+const int GHOST_WHITE_DEEP2 = 4292797695;
 
 
 // Example of getting appropriate color integer from hex string

@@ -337,99 +337,108 @@ class _WorkoutFormState extends State<WorkoutForm> with TickerProviderStateMixin
     //   curve: Curves.elasticOut,
     // );
 // print(widget.data['exercises'].length);
+print(_heightOfEachAddedExercise/100*50);
       return Stack(
         children: [
-          ListTile(
-            title: Container(
-              key: widget.data['exercises'].length == 1 ? _key : null,
-              margin: const EdgeInsets.only(bottom: 10.0),
-              decoration: BoxDecoration(
-                color: _color,
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Theme(
-                data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
-                child: ExpansionTile(
-                  // onExpansionChanged: (val) {
-                  //   setState(() {
-                  //     _turnRotationForExpansionTile = val;
-                  //   });
-                  // },
-                  // trailing: Wrap(
-                  //   spacing: 12, // space between two icons
-                  //   children: <Widget>[
-                  //     RotationTransition(
-                  //       turns: _animation,
-                  //       child: const Icon(Icons.expand_more),
-                  //     ),
-                  //     GestureDetector(
-                  //       child: Icon(Icons.delete_forever, size: 25.0, color: Colors.grey,),
-                  //       onTap: () {
-                  //         print('remove');
-                  //       }
-                  //     )
-                  //   ]),
+          FractionallySizedBox(
+            widthFactor: 0.98,
+            child: ListTile(
+              title: Container(
+                key: widget.data['exercises'].length == 1 ? _key : null,
+                margin: const EdgeInsets.only(bottom: 10.0),
+                decoration: BoxDecoration(
+                  color: _color,
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Theme(
+                  data: ThemeData().copyWith(dividerColor: Colors.transparent, splashColor: Colors.transparent, highlightColor: Colors.transparent),
+                  child: ExpansionTile(
+                    // onExpansionChanged: (val) {
+                    //   setState(() {
+                    //     _turnRotationForExpansionTile = val;
+                    //   });
+                    // },
+                    // trailing: Wrap(
+                    //   spacing: 12, // space between two icons
+                    //   children: <Widget>[
+                    //     RotationTransition(
+                    //       turns: _animation,
+                    //       child: const Icon(Icons.expand_more),
+                    //     ),
+                    //     GestureDetector(
+                    //       child: Icon(Icons.delete_forever, size: 25.0, color: Colors.grey,),
+                    //       onTap: () {
+                    //         print('remove');
+                    //       }
+                    //     )
+                    //   ]),
 
-                  leading: Container(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
-                      )
-                    ),
-                    child: ReorderableDragStartListener(
-                      index: index,
-                      child: const Icon(Icons.touch_app),
-                    )
-                  ),
-                  
-                  // trailing: Container(
-                  //   padding: const EdgeInsets.only(left: 5.0),
-                  //   decoration: BoxDecoration(
-                  //     border: Border(
-                  //       left: BorderSide(
-                  //         color: Colors.grey,
-                  //         width: 1.0,
-                  //       ),
-                  //     )
-                  //   ),
-                  //   child: ReorderableDragStartListener(
-                  //     index: index,
-                  //     child: const Icon(Icons.touch_app),
-                  //   )
-                  // ),
-                  title: Text(exercise['name']),
-                  textColor: Colors.black,
-                  iconColor: Colors.black,
-                  children: <Widget>[
-                    Container(
+                    leading: Container(
+                      padding: const EdgeInsets.only(right: 5.0),
                       decoration: BoxDecoration(
-                        color: _color,
-                        borderRadius: BorderRadius.only(
-                          bottomRight: Radius.circular(30.0),
-                          bottomLeft: Radius.circular(30.0),
-                        ),
-                      ),
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: SetsRepsForm(
-                          exercises: widget.data['exercises'],
-                          currentExerciseID: exercise['_id']
+                        border: Border(
+                          right: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
                         )
                       ),
+                      child: ReorderableDragStartListener(
+                        index: index,
+                        child: const Icon(Icons.touch_app),
+                      )
                     ),
-                  ]
+                    
+                    // trailing: Container(
+                    //   padding: const EdgeInsets.only(left: 5.0),
+                    //   decoration: BoxDecoration(
+                    //     border: Border(
+                    //       left: BorderSide(
+                    //         color: Colors.grey,
+                    //         width: 1.0,
+                    //       ),
+                    //     )
+                    //   ),
+                    //   child: ReorderableDragStartListener(
+                    //     index: index,
+                    //     child: const Icon(Icons.touch_app),
+                    //   )
+                    // ),
+                    title: Text(exercise['name']),
+                    textColor: Colors.black,
+                    iconColor: Colors.black,
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: _color,
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(30.0),
+                            bottomLeft: Radius.circular(30.0),
+                          ),
+                        ),
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: SetsRepsForm(
+                            exercises: widget.data['exercises'],
+                            currentExerciseID: exercise['_id']
+                          )
+                        ),
+                      ),
+                    ]
+                  )
                 )
-              )
-            ),
+              ),
+            )
           ),
-          new Positioned(
-            right: 0.0,
-            top: (_heightOfEachAddedExercise - 30) / 2,
+
+          Container(
+            margin: EdgeInsets.only(top: (_heightOfEachAddedExercise - 30) / 2),
+            alignment: FractionalOffset(0.99, 0.6),
+          // new Positioned(
+          //   right: 0.0,
+          //   top: (_heightOfEachAddedExercise - 30) / 2,
+
             child: GestureDetector(
               child: Container(
                 width: 30,

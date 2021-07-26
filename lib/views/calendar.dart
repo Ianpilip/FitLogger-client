@@ -59,6 +59,14 @@ class _CalendarPageState extends State<CalendarPage> {
     // _changeMonth(((page - 1) - ((page - 1) ~/ 12) * 12) + 1);
   // }
 
+  void _today() {
+    setState(() {
+      _showYear = DateTime.now().year;
+      _showMonth = DateTime.now().month;
+      _pageController.jumpToPage((_showYear - 2001) * 12 + _showMonth);
+    });
+  }
+
   void _previousYear() {
     setState(() {
       _showYear -= 1;
@@ -190,6 +198,7 @@ class _CalendarPageState extends State<CalendarPage> {
         children: [
           Column(
             children: <Widget>[
+              SizedBox(height: 15.0),
               Expanded(
                 flex: 1,
                 child: Row(
@@ -197,65 +206,91 @@ class _CalendarPageState extends State<CalendarPage> {
                   children: <Widget>[
                     Expanded(
                       flex: 1,
-                      child: Center(
-                        child: GestureDetector(
-                          child: Icon(Icons.arrow_drop_down, size: 40.0),
-                          onTap: () {
-                            _previousYear();
-                          }
-                        )
-                      ),
+                      child: Center(child: Text('$_showYear', style: TextStyle(fontSize: 20)))
                     ),
                     Expanded(
                       flex: 1,
-                      child: Center(child: Text('$_showYear', style: TextStyle(fontSize: 20))),
+                      child: Center(child: Text(calendar.months[_showMonth - 1], style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)))
                     ),
                     Expanded(
                       flex: 1,
-                      child: Center(
-                        child: GestureDetector(
-                          child: Icon(Icons.arrow_drop_up, size: 40.0),
-                          onTap: () {
-                            _nextYear();
-                          }
-                        )
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
                       child: GestureDetector(
-                        child: Center(child: Text('Current year', style: TextStyle(fontSize: 16, color: Colors.grey))),
+                        child: Center(child: Text('Today', style: TextStyle(fontSize: 16, color: Colors.grey))),
                         onTap: () {
-                          _currentYear();
-                        }
-                      )
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 3,
-                      child: Center(child: Text(calendar.months[_showMonth - 1], style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: GestureDetector(
-                        child: Center(child: Text('Current month', style: TextStyle(fontSize: 16, color: Colors.grey))),
-                        onTap: () {
-                          _currentMonth();
+                          _today();
                         },
-                        // onHorizontalDragStart: (DragStartDetails details) {
-                        //   _changePreviewDayHint({'day': null});
-                        // }
                       )
-                    )
+                    ),
                   ],
                 ),
               ),
+
+              // Expanded(
+              //   flex: 1,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: <Widget>[
+              //       Expanded(
+              //         flex: 1,
+              //         child: Center(
+              //           child: GestureDetector(
+              //             child: Icon(Icons.arrow_drop_down, size: 40.0),
+              //             onTap: () {
+              //               _previousYear();
+              //             }
+              //           )
+              //         ),
+              //       ),
+              //       Expanded(
+              //         flex: 1,
+              //         child: Center(child: Text('$_showYear', style: TextStyle(fontSize: 20))),
+              //       ),
+              //       Expanded(
+              //         flex: 1,
+              //         child: Center(
+              //           child: GestureDetector(
+              //             child: Icon(Icons.arrow_drop_up, size: 40.0),
+              //             onTap: () {
+              //               _nextYear();
+              //             }
+              //           )
+              //         ),
+              //       ),
+              //       Expanded(
+              //         flex: 4,
+              //         child: GestureDetector(
+              //           child: Center(child: Text('Current year', style: TextStyle(fontSize: 16, color: Colors.grey))),
+              //           onTap: () {
+              //             _currentYear();
+              //           }
+              //         )
+              //       )
+              //     ],
+              //   ),
+              // ),
+              // Expanded(
+              //   flex: 1,
+              //   child: Row(
+              //     children: <Widget>[
+              //       Expanded(
+              //         flex: 3,
+              //         child: Center(child: Text(calendar.months[_showMonth - 1], style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+              //       ),
+              //       Expanded(
+              //         flex: 4,
+              //         child: GestureDetector(
+              //           child: Center(child: Text('Current month', style: TextStyle(fontSize: 16, color: Colors.grey))),
+              //           onTap: () {
+              //             _currentMonth();
+              //           },
+              //           // onHorizontalDragStart: (DragStartDetails details) {
+              //           //   _changePreviewDayHint({'day': null});
+              //           // }
+              //         )
+              //       )
+              //     ],
+              //   ),
+              // ),
               Expanded(
                 flex: 7,
                 child: PageView.builder(
