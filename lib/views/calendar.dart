@@ -198,9 +198,8 @@ class _CalendarPageState extends State<CalendarPage> {
         children: [
           Column(
             children: <Widget>[
-              SizedBox(height: 15.0),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[

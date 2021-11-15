@@ -144,6 +144,7 @@ class _ExerciseFormState extends State<ExerciseForm> {
             width: 100,
             child: Center(
               child: CupertinoPicker(
+                selectionOverlay: CupertinoPickerDefaultSelectionOverlay(background: Colors.transparent),
                 backgroundColor: Colors.white,
                 scrollController: bodyRegionController,
                 onSelectedItemChanged: (int index) => _pickerHandler(),

@@ -337,7 +337,7 @@ class _WorkoutFormState extends State<WorkoutForm> with TickerProviderStateMixin
     //   curve: Curves.elasticOut,
     // );
 // print(widget.data['exercises'].length);
-print(_heightOfEachAddedExercise/100*50);
+// print(_heightOfEachAddedExercise > 0 ? (_heightOfEachAddedExercise - 30) / 2 : 1);
       return Stack(
         children: [
           FractionallySizedBox(
@@ -404,7 +404,11 @@ print(_heightOfEachAddedExercise/100*50);
                     //     child: const Icon(Icons.touch_app),
                     //   )
                     // ),
-                    title: Text(exercise['name']),
+                    title: Text(
+                      exercise['name'],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     textColor: Colors.black,
                     iconColor: Colors.black,
                     children: <Widget>[
@@ -418,11 +422,9 @@ print(_heightOfEachAddedExercise/100*50);
                         ),
                         height: MediaQuery.of(context).size.height * 0.2,
                         width: MediaQuery.of(context).size.width,
-                        child: Center(
-                          child: SetsRepsForm(
-                            exercises: widget.data['exercises'],
-                            currentExerciseID: exercise['_id']
-                          )
+                        child: SetsRepsForm(
+                          exercises: widget.data['exercises'],
+                          currentExerciseID: exercise['_id']
                         ),
                       ),
                     ]
@@ -433,7 +435,7 @@ print(_heightOfEachAddedExercise/100*50);
           ),
 
           Container(
-            margin: EdgeInsets.only(top: (_heightOfEachAddedExercise - 30) / 2),
+            margin: EdgeInsets.only(top: _heightOfEachAddedExercise > 0 ? (_heightOfEachAddedExercise - 30) / 2 : 1),
             alignment: FractionalOffset(0.99, 0.6),
           // new Positioned(
           //   right: 0.0,
@@ -460,7 +462,18 @@ print(_heightOfEachAddedExercise/100*50);
                 child: Icon(Icons.clear, size: 25.0, color: Colors.grey,),
               ),
               onTap: () {
-                print('remove');
+                for(int i = 0; i < widget.data['exercises'].length; i++) {
+                  if(widget.data['exercises'][i]['_id'] == exercise['_id']) {
+                    print(i);
+                    setState(
+                      () {
+                        widget.data['exercises'].removeAt(i);
+                      }
+                    );
+                  }
+                }
+                print(widget.data['exercises']);
+                print(['remove', exercise['_id']]);
               }
             )
           ),
